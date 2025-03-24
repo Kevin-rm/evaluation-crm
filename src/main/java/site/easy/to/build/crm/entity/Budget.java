@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.format.annotation.DateTimeFormat;
-import site.easy.to.build.crm.customValidations.contract.StartDateBeforeEndDate;
+import site.easy.to.build.crm.customValidations.budget.StartDateBeforeEndDate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

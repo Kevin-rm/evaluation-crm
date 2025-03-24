@@ -35,13 +35,16 @@ public class BudgetController {
         return "budget/create-budget";
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create/{customerId}")
     public String createBudget(
+        @PathVariable Integer customerId,
         @Valid @ModelAttribute Budget budget,
         BindingResult bindingResult,
         RedirectAttributes redirectAttributes
     ) {
-        Integer customerId = budget.getCustomer().getCustomerId();
+        Customer customer = customerService.findByCustomerId(customerId);
+        if (customer == null) return "error/not-found";
+
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.budget", bindingResult);
             redirectAttributes.addFlashAttribute("budget", budget);
@@ -50,7 +53,9 @@ public class BudgetController {
         }
 
         try {
+            budget.setCustomer(customer);
             budgetService.save(budget);
+
             return "redirect:/employee/customer/" + customerId;
         } catch (Exception e) {
             return "error/500";

@@ -42,8 +42,14 @@
                             <div class="card-body">
                                 <h4 class="card-title">Create a Budget</h4>
                                 <form th:object="${budget}"
-                                      th:action="@{/employee/budget/create/}"
+                                      th:action="@{/employee/budget/create/{customerId}(customerId=${budget.customer.customerId})}"
                                       method="post">
+                                    <div class="alert alert-danger" th:if="${#fields.hasGlobalErrors()}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.globalErrors()}" th:text="${err}"></li>
+                                        </ul>
+                                    </div>
+
                                     <input type="hidden" th:field="*{customer.customerId}" />
 
                                     <label class="m-t-20" for="name">Name:</label>
