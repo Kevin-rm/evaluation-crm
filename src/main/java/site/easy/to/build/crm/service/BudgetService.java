@@ -33,10 +33,8 @@ public class BudgetService {
         return budgetRepository.findAll();
     }
 
-    public List<Budget> findBudgetsByCustomerId(int customerId) {
-        Customer customer = new Customer();
-        customer.setCustomerId(customerId);
-        return budgetRepository.findBudgetByCustomer(customer);
+    public List<Budget> getByCustomer(Integer customerId) {
+        return budgetRepository.findByCustomerCustomerId(customerId);
     }
 
     public Budget save(Budget budget) {

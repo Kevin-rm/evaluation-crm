@@ -53,7 +53,7 @@ public class BudgetController {
         }
 
 
-        List<Budget> budgets = budgetService.findBudgetsByCustomerId(customerId);
+        List<Budget> budgets = budgetService.getByCustomer(customerId);
 
         model.addAttribute("budgets", budgets);
         model.addAttribute("customer", customer);

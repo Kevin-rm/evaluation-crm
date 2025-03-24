@@ -29,7 +29,7 @@ public class BudgetManagementRestController {
 
     @GetMapping("/budget/customer/{customerId}")
     public ResponseEntity<List<Budget>> getBudget(@PathVariable Integer customerId) {
-        List<Budget> budget = budgetService.findBudgetsByCustomerId(customerId);
+        List<Budget> budget = budgetService.getByCustomer(customerId);
         return new ResponseEntity<>(budget, HttpStatus.OK);
     }
 
