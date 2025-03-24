@@ -85,7 +85,7 @@
                                         <th>Status</th>
                                         <th>Customer</th>
                                         <th>Assigned Employee</th>
-                                        <th>Add expense</th>
+                                        <th>Manage expense</th>
                                         <th>Show</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
@@ -99,7 +99,9 @@
                                         <td th:text="${lead.status}"></td>
                                         <td th:text="${lead.customer.name}"></td>
                                         <td th:text="${lead.employee.username}"></td>
-                                        <td><a th:href="${home + 'employee/expense/create?leadId=' + lead.leadId}">Go to form</a></td>
+                                        <td class="text-center"><a th:href="${home + 'employee/expense/form?leadId=' + lead.leadId}">
+                                            Go to form <i class="fas fa-arrow-right"></i>
+                                        </a></td>
                                         <td><a th:href="${home + 'employee/lead/show/' + lead.leadId}"><i class="fas fa-eye"></i></a></td>
                                         <td><a th:href="${home + 'employee/lead/update/' + lead.leadId}"><i class="fas fa-edit"></i></a></td>
                                         <td>

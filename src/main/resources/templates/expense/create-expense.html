@@ -64,7 +64,7 @@
                                 <div id="alertMessage" class="alert alert-warning" style="display: none;">
                                     Attention : Ce budget est proche de sa limite !
                                 </div>
-                                <form th:object="${expense}" th:action="@{/employee/expense/create}" method="post"
+                                <form th:object="${expense}" th:action="@{/employee/expense/form}" method="post"
                                     id="expenseForm">
                                     <input type="hidden" th:value="${budgetDTOGlobal.currentAmount}" id="currentAmount">
                                     <input type="hidden" th:value="${budgetDTOGlobal.status}" id="status">
@@ -183,45 +183,8 @@
                     this.submit();
                 }
             });
-
-
-            // budgetSelect.addEventListener('change', function () {
-            //     console.log("Selected option:", this.options[this.selectedIndex].text);
-            //     const selectedOption = this.options[this.selectedIndex];
-            //     const status = selectedOption.text.split(' - ')[2];
-            //
-            //     // Vérifier si le statut est "Alerte budget"
-            //     if (status && status.includes('Alerte budget')) {
-            //         alertDiv.style.display = 'block';
-            //     } else {
-            //         alertDiv.style.display = 'none';
-            //     }
-            // });
-
-            // document.getElementById('expenseForm').addEventListener('submit', function (e) {
-            //     e.preventDefault();
-            //
-            //     const amountInput = document.getElementById('amount');
-            //     const selectedOption = budgetSelect.options[budgetSelect.selectedIndex];
-            //     const amount = parseFloat(amountInput.value);
-            //
-            //     const statusText = selectedOption.text.split(' - ');
-            //     const currentAmount = parseFloat(statusText[0].trim());
-            //
-            //     if (amount > currentAmount) {
-            //         const userConfirmed = confirm('Le montant saisi est supérieur au budget disponible. Voulez-vous vraiment continuer ?');
-            //
-            //         if (userConfirmed) {
-            //             this.submit();
-            //         }
-            //     } else {
-            //         this.submit();
-            //     }
-            // });
         });
     </script>
-
-
 </body>
 
 </html>

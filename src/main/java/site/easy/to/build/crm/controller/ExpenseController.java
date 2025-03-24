@@ -1,102 +1,96 @@
 package site.easy.to.build.crm.controller;
 
-import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import site.easy.to.build.crm.DTO.BudgetDTO;
 import site.easy.to.build.crm.entity.*;
 import site.easy.to.build.crm.service.BudgetService;
 import site.easy.to.build.crm.service.ExpenseService;
 import site.easy.to.build.crm.service.lead.LeadService;
 import site.easy.to.build.crm.service.ticket.TicketService;
-import site.easy.to.build.crm.service.user.UserService;
-import site.easy.to.build.crm.util.AuthenticationUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/employee/expense")
 public class ExpenseController {
 
     private final ExpenseService expenseService;
+    private final BudgetService budgetService;
     private final LeadService leadService;
     private final TicketService ticketService;
-    private final UserService userService;
-    private final AuthenticationUtils authenticationUtils;
-    private final BudgetService budgetService;
 
-
-
-    @GetMapping("/create")
-    public String showCreateForm(@RequestParam(required = false) Integer leadId,
-            @RequestParam(required = false) Integer ticketId,
-            Model model) {
-
-        BudgetDTO budgetDTOGlobal = new BudgetDTO();
-        Expense expense = new Expense();
+    @GetMapping("/form")
+    public String showCreateForm(
+        @RequestParam(required = false) Integer leadId,
+        @RequestParam(required = false) Integer ticketId,
+        Model model
+    ) {
+        BudgetDTO budgetDTOGlobal;
+        Expense expense = null;
         if (leadId != null) {
             Lead lead = leadService.findByLeadId(leadId);
-            if (lead == null) {
-                return "error/not-found";
-            }
-            if (lead.getExpense() != null) {
-                expense = lead.getExpense();
-            }
+            if (lead == null) return "error/not-found";
+
+            if (lead.getExpense() != null) expense = lead.getExpense();
             budgetDTOGlobal = budgetService.getBudgetDTOGlobal(lead.getCustomer().getCustomerId());
-            model.addAttribute("budgetDTOGlobal", budgetDTOGlobal);
+
             model.addAttribute("leadId", leadId);
         } else if (ticketId != null) {
             Ticket ticket = ticketService.findByTicketId(ticketId);
-            if (ticket == null) {
-                return "error/not-found";
-            }
-            if (ticket.getExpense() != null) {
-                expense = ticket.getExpense();
-            }
-            budgetDTOGlobal = budgetService.getBudgetDTOGlobal(ticket.getCustomer().getCustomerId());
-            model.addAttribute("budgetDTOGlobal", budgetDTOGlobal);
-            model.addAttribute("ticketId", ticketId);
-        } else {
-            return "error/400";
-        }
+            if (ticket == null) return "error/not-found";
 
-        model.addAttribute("expense", expense);
+            if (ticket.getExpense() != null) expense = ticket.getExpense();
+            budgetDTOGlobal = budgetService.getBudgetDTOGlobal(ticket.getCustomer().getCustomerId());
+
+            model.addAttribute("ticketId", ticketId);
+        } else return "error/400";
+
+        model.addAttribute("budgetDTOGlobal", budgetDTOGlobal);
+        if (!model.containsAttribute("expense"))
+            model.addAttribute("expense", expense == null ? new Expense() : expense);
+
         return "expense/create-expense";
     }
 
-    @PostMapping("/create")
-    public String createExpense(@ModelAttribute("expense") @Validated Expense expense,
-            BindingResult bindingResult,
-            @RequestParam(required = false) Integer leadId,
-            @RequestParam(required = false) Integer ticketId,
-            Model model) {
-        System.out.println("error "+bindingResult.hasErrors());
+    @PostMapping("/form")
+    public String createExpense(
+        @Valid @ModelAttribute Expense expense,
+        @RequestParam(required = false) Integer leadId,
+        @RequestParam(required = false) Integer ticketId,
+        BindingResult bindingResult,
+        RedirectAttributes redirectAttributes
+    ) {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.expense", bindingResult);
+            redirectAttributes.addFlashAttribute("expense", expense);
 
-        // Mettre à jour le lead ou le ticket selon le contexte
+            return "redirect:/employee/expense/form%s".formatted(leadId != null ? "?leadId=" + leadId : "?ticketId=" + ticketId);
+        }
+
         if (leadId != null) {
             Lead lead = leadService.findByLeadId(leadId);
-            if (lead == null) {
-                return "error/not-found";
-            }
+            if (lead == null) return "error/not-found";
+
             expense.setCustomer(lead.getCustomer());
-            Expense savedExpense = expenseService.save(expense);
-            lead.setExpense(savedExpense);
+            expenseService.save(expense);
+            lead.setExpense(expense);
             leadService.save(lead);
+
             return "redirect:/employee/lead/show/" + leadId;
         } else if (ticketId != null) {
             Ticket ticket = ticketService.findByTicketId(ticketId);
-            if (ticket == null) {
-                return "error/not-found";
-            }
+            if (ticket == null) return "error/not-found";
+
             expense.setCustomer(ticket.getCustomer());
-            Expense savedExpense = expenseService.save(expense);
-            ticket.setExpense(savedExpense);
+            expenseService.save(expense);
+            ticket.setExpense(expense);
             ticketService.save(ticket);
+
             return "redirect:/employee/ticket/show-ticket/" + ticketId;
         }
 
