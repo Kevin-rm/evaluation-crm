@@ -8,7 +8,7 @@ import site.easy.to.build.crm.entity.Ticket;
 import site.easy.to.build.crm.entity.Expense;
 import site.easy.to.build.crm.service.lead.LeadService;
 import site.easy.to.build.crm.service.ticket.TicketService;
-import site.easy.to.build.crm.service.budget.ExpenseService;
+import site.easy.to.build.crm.service.ExpenseService;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class ExpenseRestController {
         } else {
             ticketService.delete(ticket);
         }
-        Expense expense = expenseService.findById(ticket.getExpense().getExpenseId());
+        Expense expense = expenseService.findById(ticket.getExpense().getId());
         if (expense == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -64,7 +64,7 @@ public class ExpenseRestController {
         } else {
             leadService.delete(lead);
         }
-        Expense expense = expenseService.findById(lead.getExpense().getExpenseId());
+        Expense expense = expenseService.findById(lead.getExpense().getId());
         if (expense == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -97,7 +97,7 @@ public class ExpenseRestController {
 
     @PutMapping("/update-expense")
     public ResponseEntity<Expense> updateExpense(@RequestBody Expense expense) {
-        Expense expenseVerif = expenseService.findById(expense.getExpenseId());
+        Expense expenseVerif = expenseService.findById(expense.getId());
         if (expenseVerif == null) {
             return ResponseEntity.notFound().build();
         }

@@ -1,4 +1,4 @@
-package site.easy.to.build.crm.service.budget;
+package site.easy.to.build.crm.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,6 @@
 package site.easy.to.build.crm.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,15 +8,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.DTO.BudgetDTO;
 import site.easy.to.build.crm.entity.*;
-import site.easy.to.build.crm.service.budget.BudgetService;
-import site.easy.to.build.crm.service.budget.ExpenseService;
+import site.easy.to.build.crm.service.BudgetService;
+import site.easy.to.build.crm.service.ExpenseService;
 import site.easy.to.build.crm.service.lead.LeadService;
 import site.easy.to.build.crm.service.ticket.TicketService;
 import site.easy.to.build.crm.service.user.UserService;
 import site.easy.to.build.crm.util.AuthenticationUtils;
-import site.easy.to.build.crm.util.AuthorizationUtil;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,7 +48,6 @@ public class ExpenseController {
             if (lead.getExpense() != null) {
                 expense = lead.getExpense();
             }
-            budgetDTOS = budgetService.getBudgetsAfterExpense(lead.getCustomer().getCustomerId());
             budgetDTOGlobal = budgetService.getBudgetDTOGlobal(lead.getCustomer().getCustomerId());
             model.addAttribute("budgetDTOGlobal", budgetDTOGlobal);
             model.addAttribute("budgetDTOS", budgetDTOS);
@@ -65,7 +60,6 @@ public class ExpenseController {
             if (ticket.getExpense() != null) {
                 expense = ticket.getExpense();
             }
-            budgetDTOS = budgetService.getBudgetsAfterExpense(ticket.getCustomer().getCustomerId());
             budgetDTOGlobal = budgetService.getBudgetDTOGlobal(ticket.getCustomer().getCustomerId());
             model.addAttribute("budgetDTOGlobal", budgetDTOGlobal);
             model.addAttribute("budgetDTOS", budgetDTOS);

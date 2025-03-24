@@ -44,9 +44,9 @@
                                 <form th:object="${budget}" th:action="@{/budget/create-budget}" method="post">
                                     <input type="hidden" th:field="*{customer.customerId}" />
 
-                                    <label class="m-t-20" for="title">Titre:</label>
+                                    <label class="m-t-20" for="title">Name:</label>
                                     <div class="input-group">
-                                        <input type="text" id="title" th:field="*{title}" class="form-control" required>
+                                        <input type="text" id="title" th:field="*{name}" class="form-control" required>
                                     </div>
 
                                     <label class="m-t-20" for="amount">Montant:</label>

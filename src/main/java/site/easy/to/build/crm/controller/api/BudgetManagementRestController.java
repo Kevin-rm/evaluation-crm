@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.entity.Budget;
 import site.easy.to.build.crm.entity.Parameter;
-import site.easy.to.build.crm.service.budget.BudgetService;
+import site.easy.to.build.crm.service.BudgetService;
 import site.easy.to.build.crm.service.budget.ParameterService;
 
 import java.util.List;

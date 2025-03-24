@@ -5,39 +5,39 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
 @Entity
-@Table
+@DynamicInsert
 public class Expense {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "expense_id")
-    private Integer expenseId;
+    private Integer id;
 
-    @Column(name = "description")
+    @Setter
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "amount")
+    @Setter
+    @Column(nullable = false)
     private Double amount;
 
+    @Setter
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Column(name = "date_expense")
-    private LocalDate dateExpense;
+    @Column(nullable = false)
+    private LocalDate expenseDate;
 
-    @ManyToOne
-    @JoinColumn(name = "budget_id")
-    private Budget budget;
+    private LocalDate createdAt;
 
+    @Setter
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
-
 }

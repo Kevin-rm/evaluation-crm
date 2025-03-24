@@ -1,28 +1,27 @@
-package site.easy.to.build.crm.service.budget;
+package site.easy.to.build.crm.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.DTO.BudgetDTO;
 import site.easy.to.build.crm.entity.Budget;
 import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.Parameter;
 import site.easy.to.build.crm.repository.BudgetRepository;
+import site.easy.to.build.crm.service.budget.ParameterService;
 import site.easy.to.build.crm.service.customer.CustomerService;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class BudgetService {
     private final BudgetRepository budgetRepository;
-    private ParameterService parameterService;
-    private CustomerService customerService;
+    private final ParameterService parameterService;
+    private final CustomerService customerService;
 
 
     public Budget findById(Integer id) {
@@ -49,19 +48,6 @@ public class BudgetService {
 
     public void delete(Budget budget) {
         budgetRepository.delete(budget);
-    }
-
-    public List<BudgetDTO> getBudgetsAfterExpense(Integer customerId) {
-        List<Object[]> rawResults = budgetRepository.getBudgetsAfterExpenseRaw(customerId);
-        List<BudgetDTO> budgetDTOS = rawResults.stream().map(obj -> new BudgetDTO(
-                (Integer) obj[0],
-                (String) obj[1],
-                obj[2] != null ? ((BigDecimal) obj[2]).doubleValue() : 0.0,
-                obj[3] != null ? ((BigDecimal) obj[3]).doubleValue() : 0.0,
-                obj[4] != null ? ((java.sql.Date) obj[4]).toLocalDate() : null,
-                obj[5] != null ? ((java.sql.Date) obj[5]).toLocalDate() : null,
-                (Integer) obj[6])).toList();
-        return setStatus(budgetDTOS);
     }
 
     public List<BudgetDTO> setStatus(List<BudgetDTO> budgets) {

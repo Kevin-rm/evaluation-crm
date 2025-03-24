@@ -20,7 +20,7 @@ import site.easy.to.build.crm.service.settings.TicketEmailSettingsService;
 import site.easy.to.build.crm.service.ticket.TicketService;
 import site.easy.to.build.crm.service.user.UserService;
 import site.easy.to.build.crm.util.*;
-import site.easy.to.build.crm.service.budget.ExpenseService;
+import site.easy.to.build.crm.service.ExpenseService;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
