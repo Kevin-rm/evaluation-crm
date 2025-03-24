@@ -3,6 +3,8 @@ package site.easy.to.build.crm.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
 import site.easy.to.build.crm.entity.Expense;
 
 import java.time.LocalDateTime;
@@ -61,7 +63,8 @@ public class Lead {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @ManyToOne
+    @Getter @Setter
+    @OneToOne
     @JoinColumn(name = "expense_id")
     private Expense expense;
 
@@ -223,13 +226,5 @@ public class Lead {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Expense getExpense() {
-        return expense;
-    }
-
-    public void setExpense(Expense expense) {
-        this.expense = expense;
     }
 }
