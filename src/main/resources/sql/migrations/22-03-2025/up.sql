@@ -26,6 +26,16 @@ CREATE TABLE IF NOT EXISTS parameter_crm
     parameter_value DOUBLE
 );
 
+CREATE TABLE IF NOT EXISTS budget_settings
+(
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    alert_threshold DECIMAL(5, 2) NOT NULL DEFAULT 80.00,
+    created_at      DATETIME               DEFAULT CURRENT_TIMESTAMP,
+    updated_at      DATETIME               DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+INSERT INTO budget_settings (alert_threshold)
+VALUES (80.00);
+
 ALTER TABLE trigger_ticket
     ADD COLUMN expense_id INT;
 ALTER TABLE trigger_ticket

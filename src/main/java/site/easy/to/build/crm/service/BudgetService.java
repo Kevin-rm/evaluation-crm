@@ -9,6 +9,7 @@ import site.easy.to.build.crm.entity.Parameter;
 import site.easy.to.build.crm.repository.BudgetRepository;
 import site.easy.to.build.crm.service.budget.ParameterService;
 import site.easy.to.build.crm.service.customer.CustomerService;
+import site.easy.to.build.crm.service.settings.BudgetSettingsService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,9 +21,9 @@ import java.util.stream.Collectors;
 @Service
 public class BudgetService {
     private final BudgetRepository budgetRepository;
+    private final BudgetSettingsService budgetSettingsService;
     private final ParameterService parameterService;
     private final CustomerService customerService;
-
 
     public Budget findById(Integer id) {
         return budgetRepository.findById(id).orElse(null);

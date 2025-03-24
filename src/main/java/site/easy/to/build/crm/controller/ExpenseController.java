@@ -37,7 +37,6 @@ public class ExpenseController {
             @RequestParam(required = false) Integer ticketId,
             Model model) {
 
-        List<BudgetDTO> budgetDTOS = new ArrayList<>();
         BudgetDTO budgetDTOGlobal = new BudgetDTO();
         Expense expense = new Expense();
         if (leadId != null) {
@@ -50,7 +49,6 @@ public class ExpenseController {
             }
             budgetDTOGlobal = budgetService.getBudgetDTOGlobal(lead.getCustomer().getCustomerId());
             model.addAttribute("budgetDTOGlobal", budgetDTOGlobal);
-            model.addAttribute("budgetDTOS", budgetDTOS);
             model.addAttribute("leadId", leadId);
         } else if (ticketId != null) {
             Ticket ticket = ticketService.findByTicketId(ticketId);
@@ -62,7 +60,6 @@ public class ExpenseController {
             }
             budgetDTOGlobal = budgetService.getBudgetDTOGlobal(ticket.getCustomer().getCustomerId());
             model.addAttribute("budgetDTOGlobal", budgetDTOGlobal);
-            model.addAttribute("budgetDTOS", budgetDTOS);
             model.addAttribute("ticketId", ticketId);
         } else {
             return "error/400";

@@ -9,5 +9,6 @@ ALTER TABLE trigger_lead
     DROP COLUMN expense_id;
 
 DROP TABLE IF EXISTS expense;
+DROP TABLE IF EXISTS budget_settings;
 DROP TABLE IF EXISTS parameter_crm;
 DROP TABLE IF EXISTS budget;
