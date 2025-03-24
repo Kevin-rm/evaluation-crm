@@ -30,13 +30,14 @@ public class ExpenseController {
         @RequestParam(required = false) Integer ticketId,
         Model model
     ) {
-        BudgetDTO budgetDTOGlobal;
+        final boolean modelContainsExpenseAttribute = model.containsAttribute("expense");
+        final BudgetDTO budgetDTOGlobal;
         Expense expense = null;
         if (leadId != null) {
             Lead lead = leadService.findByLeadId(leadId);
             if (lead == null) return "error/not-found";
 
-            if (lead.getExpense() != null) expense = lead.getExpense();
+            if (lead.getExpense() != null && !modelContainsExpenseAttribute) expense = lead.getExpense();
             budgetDTOGlobal = budgetService.getBudgetDTOGlobal(lead.getCustomer().getCustomerId());
 
             model.addAttribute("leadId", leadId);
@@ -44,14 +45,14 @@ public class ExpenseController {
             Ticket ticket = ticketService.findByTicketId(ticketId);
             if (ticket == null) return "error/not-found";
 
-            if (ticket.getExpense() != null) expense = ticket.getExpense();
+            if (ticket.getExpense() != null && !modelContainsExpenseAttribute) expense = ticket.getExpense();
             budgetDTOGlobal = budgetService.getBudgetDTOGlobal(ticket.getCustomer().getCustomerId());
 
             model.addAttribute("ticketId", ticketId);
         } else return "error/400";
 
         model.addAttribute("budgetDTOGlobal", budgetDTOGlobal);
-        if (!model.containsAttribute("expense"))
+        if (!modelContainsExpenseAttribute)
             model.addAttribute("expense", expense == null ? new Expense() : expense);
 
         return "expense/create-expense";
