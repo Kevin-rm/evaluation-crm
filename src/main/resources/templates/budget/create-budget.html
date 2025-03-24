@@ -42,7 +42,7 @@
                             <div class="card-body">
                                 <h4 class="card-title">Create a Budget</h4>
                                 <form th:object="${budget}"
-                                      th:action="@{/employee/budget/create/{customerId}(customerId=*{customer.customerId})}"
+                                      th:action="@{/employee/budget/create/}"
                                       method="post">
                                     <input type="hidden" th:field="*{customer.customerId}" />
 
