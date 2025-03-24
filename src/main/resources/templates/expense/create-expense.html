@@ -68,8 +68,7 @@
                                     id="expenseForm">
                                     <input type="hidden" th:value="${budgetDTOGlobal.currentAmount}" id="currentAmount">
                                     <input type="hidden" th:value="${budgetDTOGlobal.status}" id="status">
-                                    <input type="hidden" th:if="${ticketId != null}" name="ticketId"
-                                        th:value="${ticketId}">
+                                    <input type="hidden" th:if="${ticketId != null}" name="ticketId" th:value="${ticketId}">
                                     <input type="hidden" th:if="${leadId != null}" name="leadId" th:value="${leadId}">
 
                                     <label class="m-t-20" for="description">Description:</label>
