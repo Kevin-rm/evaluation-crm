@@ -6,6 +6,10 @@
 <meta name="_csrf_header" content="${_csrf.headerName}" />
 <link rel="stylesheet" th:href="@{/css/bootstrap-wysihtml5.css}" />
 <!-- Editable CSS -->
+<link rel="stylesheet" type="text/css"
+      th:href="@{/css/dataTables.bootstrap4.css}">
+<link rel="stylesheet" type="text/css"
+      th:href="@{/css/responsive.dataTables.min.css}">
 
 <!-- Custom CSS -->
 <link th:href="@{/css/style.min.css}" rel="stylesheet">
@@ -71,14 +75,18 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Budgets for <span th:text="${customer.name}"></span></h4>
-                                <div class="d-flex justify-content-end mb-4">
-                                    <a th:href="@{/budget/create/} + ${customer.customerId}"
+                                <div class="d-flex justify-content-between mb-4">
+                                    <a th:href="@{/employee/customer/{customerId}(customerId=${customer.customerId})}"
+                                        class="btn btn-secondary">
+                                        <i class="fa fa-arrow-left"></i> Back to Customer
+                                    </a>
+                                    <a th:href="@{/employee/budget/create/{customerId}(customerId=${customer.customerId})}"
                                         class="btn btn-info">
                                         <i class="fa fa-plus-circle"></i> Create Budget
                                     </a>
                                 </div>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
+                                <div class="table-responsive m-t-40">
+                                    <table id="config-table" class="table display table-bordered table-striped no-wrap">
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
@@ -154,6 +162,14 @@
     <script th:src="@{/js/library/jquery.sparkline.min.js}" type="text/javascript">></script>
     <!--Custom JavaScript -->
     <script th:src="@{/js/library/custom.min.js}" type="text/javascript">></script>
+    <!-- Editable -->
+    <script th:src="@{/js/library/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/js/library/dataTables.responsive.min.js}"></script>
+    <script>
+        $('#config-table').DataTable({
+            responsive: true
+        });
+    </script>
 </body>
 
 </html>
