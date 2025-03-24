@@ -53,6 +53,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers("/api/**").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/register/**").permitAll()
                 .requestMatchers("/set-employee-password/**").permitAll()
                 .requestMatchers("/change-password/**").permitAll()

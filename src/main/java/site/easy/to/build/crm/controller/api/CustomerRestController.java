@@ -16,6 +16,7 @@ import java.util.List;
 public class CustomerRestController {
     private CustomerService customerService;
     private UserService userService;
+
     @GetMapping("/customer")
     public ResponseEntity<List<Customer>> getCustomer() {
         return ResponseEntity.ok(customerService.findAll());
