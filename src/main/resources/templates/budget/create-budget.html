@@ -94,8 +94,12 @@
 
                                     <div class="form-actions m-t-40">
                                         <button type="submit" class="btn btn-success"> 
-                                            <i class="fa fa-check mr-2"></i> Save
+                                            <i class="fa fa-check"></i> Save
                                         </button>
+                                        <a th:href="@{/employee/customer/{customerId}(customerId=${budget.customer.customerId})}"
+                                           class="btn btn-secondary ml-2">
+                                           <i class="fa fa-arrow-left"></i> Back to Customer
+                                        </a>
                                     </div>
                                 </form>
                             </div>
