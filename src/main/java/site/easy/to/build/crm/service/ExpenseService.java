@@ -1,6 +1,6 @@
 package site.easy.to.build.crm.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.entity.*;
 import site.easy.to.build.crm.repository.ExpenseRepository;
@@ -12,29 +12,26 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class ExpenseService {
-    private ExpenseRepository expenseRepository;
+    private final ExpenseRepository expenseRepository;
     private final TicketService ticketService;
     private final LeadService leadService;
     private final CustomerService customerService;
 
-    public Expense findById(Integer id) {
-        return expenseRepository.findById(id).orElse(null);
+    public List<Expense> getAll() {
+        return expenseRepository.findAll();
     }
 
-    public List<Expense> findAll() {
-        return expenseRepository.findAll();
+    public Optional<Expense> getById(Integer id) {
+        return expenseRepository.findById(id);
     }
 
     public void save(Expense expense) {
         expenseRepository.save(expense);
-    }
-
-    public Expense update(Expense expense) {
-        return expenseRepository.save(expense);
     }
 
     public void delete(Expense expense) {
@@ -42,7 +39,6 @@ public class ExpenseService {
     }
 
     ///  API
-
     public Map<Integer,Double> getTicketExpensesByCustomer(){
         List<Customer> customers = customerService.findAll();
         Map<Integer,Double> customExpense = new HashMap<>();
@@ -56,7 +52,8 @@ public class ExpenseService {
         }
         return customExpense;
     }
-    public   Map<Integer,Double> getLeadExpensesByCustomer(){
+
+    public Map<Integer,Double> getLeadExpensesByCustomer(){
         List<Customer> customers = customerService.findAll();
         Map<Integer,Double> customExpense = new HashMap<>();
         for(Customer customer : customers){
@@ -69,7 +66,6 @@ public class ExpenseService {
         }
         return customExpense;
     }
-
 
     public BigDecimal getTotalTicketExpenses() {
         List<Expense> expenses = expenseRepository.findAllByTicketIsNotNull();
@@ -84,5 +80,4 @@ public class ExpenseService {
                 .map(expense -> BigDecimal.valueOf(expense.getAmount()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
-
 }

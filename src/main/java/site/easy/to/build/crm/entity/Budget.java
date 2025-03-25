@@ -1,5 +1,6 @@
 package site.easy.to.build.crm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -51,8 +52,10 @@ public class Budget {
     @Column(nullable = false)
     private LocalDate endDate;
 
+    @JsonIgnore
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @Setter
     @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id", nullable = false)

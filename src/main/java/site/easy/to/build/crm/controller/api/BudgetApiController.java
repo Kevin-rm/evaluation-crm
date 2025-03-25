@@ -16,7 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/budgets")
-public class BudgetController {
+public class BudgetApiController {
 
     private final BudgetService budgetService;
     private final BudgetSettingsService budgetSettingsService;

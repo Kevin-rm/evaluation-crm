@@ -78,4 +78,8 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> error(String message) {
         return error(HttpStatus.BAD_REQUEST, message, null);
     }
+
+    public static <T> ApiResponse<T> notFound(String message) {
+        return error(HttpStatus.NOT_FOUND, message);
+    }
 }

@@ -20,7 +20,7 @@ import site.easy.to.build.crm.util.ApiUtils;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
-public class SecurityController {
+public class SecurityApiController {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
