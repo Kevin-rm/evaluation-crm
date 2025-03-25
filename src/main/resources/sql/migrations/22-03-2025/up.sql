@@ -20,12 +20,6 @@ CREATE TABLE IF NOT EXISTS expense
     customer_id  INT            NOT NULL REFERENCES customer (customer_id)
 );
 
-CREATE TABLE IF NOT EXISTS parameter_crm
-(
-    parameter_key   VARCHAR(50) PRIMARY KEY,
-    parameter_value DOUBLE
-);
-
 CREATE TABLE IF NOT EXISTS budget_settings
 (
     id              INT AUTO_INCREMENT PRIMARY KEY,
