@@ -44,7 +44,7 @@ public class BudgetManagementRestController {
             return ResponseEntity.notFound().build();
         }
         budget.setAmount(amount);
-        return ResponseEntity.ok(budgetService.update(budget));
+        return ResponseEntity.ok(budgetService.save(budget));
     }
 
 

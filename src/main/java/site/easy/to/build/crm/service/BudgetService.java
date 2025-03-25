@@ -2,7 +2,8 @@ package site.easy.to.build.crm.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import site.easy.to.build.crm.DTO.BudgetDTO;
+import site.easy.to.build.crm.dto.BudgetDTO;
+import site.easy.to.build.crm.dto.CustomerBudgetSummaryDTO;
 import site.easy.to.build.crm.entity.Budget;
 import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.Parameter;
@@ -12,14 +13,19 @@ import site.easy.to.build.crm.service.customer.CustomerService;
 import site.easy.to.build.crm.service.settings.BudgetSettingsService;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static site.easy.to.build.crm.dto.CustomerBudgetSummaryDTO.BudgetStatusAlert.*;
+
 @RequiredArgsConstructor
 @Service
 public class BudgetService {
+    private static final BigDecimal ONE_HUNDRED = new BigDecimal("100.00");
+
     private final BudgetRepository budgetRepository;
     private final BudgetSettingsService budgetSettingsService;
     private final ParameterService parameterService;
@@ -41,32 +47,9 @@ public class BudgetService {
         return budgetRepository.save(budget);
     }
 
-    public Budget update(Budget budget) {
-        return budgetRepository.save(budget);
-    }
-
     public void delete(Budget budget) {
         budgetRepository.delete(budget);
     }
-
-    public List<BudgetDTO> setStatus(List<BudgetDTO> budgets) {
-        Parameter parameter = parameterService.findThresholdAlert();
-        for (BudgetDTO budget : budgets) {
-            double threshold = budget.getInitialAmount() * parameter.getParameterValue() / 100;
-            if (budget.getInitialAmount() - budget.getCurrentAmount() >= threshold) {
-                budget.setStatus("Alerte budget a " + parameter.getParameterValue() + " % "
-                        + "Budget initial : " + budget.getInitialAmount() + "\n" +
-                        "Budget Actuel :  " + budget.getCurrentAmount() + "\n");
-            } else {
-                budget.setStatus("Budget normal");
-            }
-        }
-        return budgets;
-    }
-
-//    public Double cumulBudget(Integer customerId) {
-//        return ((BigDecimal) budgetRepository.getBudgetsAfterExpenseRawGlobal(customerId)).doubleValue();
-//    }
 
     public BudgetDTO getBudgetGlobal(Integer customerId){
         BudgetDTO budgetDTO = new BudgetDTO();
@@ -82,6 +65,7 @@ public class BudgetService {
 
         return budgetDTO;
     }
+
     public BudgetDTO getBudgetDTOGlobal(Integer customerId) {
         Parameter parameter = parameterService.findThresholdAlert();
         BudgetDTO budgetDTO = getBudgetGlobal(customerId);
@@ -94,6 +78,22 @@ public class BudgetService {
             budgetDTO.setStatus("Budget normal");
         }
         return budgetDTO;
+    }
+
+    public CustomerBudgetSummaryDTO getCustomerBudgetSummaryDTO(Integer customerId) {
+        Object[] rawCustomerBudgetSummary = (Object[]) budgetRepository.getCustomerBudgetSummary(customerId);
+
+        BigDecimal initialAmount = (BigDecimal) rawCustomerBudgetSummary[1];
+        BigDecimal currentAmount = (BigDecimal) rawCustomerBudgetSummary[2];
+
+        BigDecimal alertThreshold = budgetSettingsService.getDefault().getAlertThreshold();
+        BigDecimal thresholdValue = initialAmount.multiply(alertThreshold).divide(ONE_HUNDRED, 2, RoundingMode.HALF_UP);
+
+        CustomerBudgetSummaryDTO result = new CustomerBudgetSummaryDTO(
+            (Integer) rawCustomerBudgetSummary[0], initialAmount, currentAmount, alertThreshold);
+        result.setStatus((result.totalExpenses().compareTo(thresholdValue) >= 0) ? WARNING : OK);
+
+        return result;
     }
 
     // API SERVICE

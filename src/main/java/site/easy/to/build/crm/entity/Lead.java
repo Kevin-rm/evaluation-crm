@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
-import site.easy.to.build.crm.entity.Expense;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,7 +63,7 @@ public class Lead {
     private LocalDateTime createdAt;
 
     @Getter @Setter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "expense_id")
     private Expense expense;
 

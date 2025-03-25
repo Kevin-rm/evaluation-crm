@@ -51,7 +51,7 @@ public class Ticket {
     private LocalDateTime createdAt;
 
     @Getter @Setter
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "expense_id")
     private Expense expense;
 
