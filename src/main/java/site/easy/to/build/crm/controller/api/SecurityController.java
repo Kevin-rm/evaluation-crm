@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,10 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import site.easy.to.build.crm.entity.User;
 import site.easy.to.build.crm.request.LoginRequest;
+import site.easy.to.build.crm.response.ApiResponse;
 import site.easy.to.build.crm.service.user.UserService;
 import site.easy.to.build.crm.util.ApiUtils;
-
-import java.util.Collections;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,19 +22,21 @@ import java.util.Collections;
 public class SecurityController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(
+    public ResponseEntity<ApiResponse<?>> login(
         @Valid @RequestBody LoginRequest request,
         BindingResult bindingResult
     ) {
-        if (bindingResult.hasErrors())
-            return ResponseEntity.badRequest().body(
-                Collections.singletonMap("errors", ApiUtils.validationErrorsToMap(bindingResult)
-            ));
+        if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(ApiResponse.error(
+            "Validation failed", ApiUtils.validationErrorsToMap(bindingResult)
+        ));
 
         User user = userService.findByEmail(request.getEmail());
-        return user == null ? ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(Collections.singletonMap("error", "Identifiant invalide")) : ResponseEntity.ok(user);
+        return user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword()) ?
+            ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.error(HttpStatus.UNAUTHORIZED, "Identifiant invalide")) :
+            ResponseEntity.ok(ApiResponse.success("Login successful", user));
     }
 }
