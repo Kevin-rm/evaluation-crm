@@ -168,9 +168,11 @@
                 alertMessageDiv.style.display = "block";
             } else alertMessageDiv.style.display = "none";
 
-            document.getElementById("expenseForm").addEventListener("submit", function(e) {
-                e.preventDefault();
+            document.getElementById("expenseForm").addEventListener("submit", (e) => {
+                const isUpdate = /*[[${expense.id != null}]]*/ false;
+                if (isUpdate) return true;
 
+                e.preventDefault();
                 if (parseFloat(document.getElementById("amount").value) > currentBudgetAmount) {
                     if (confirm("The entered amount exceeds the available budget. Do you want to continue anyway?"))
                         this.submit();
