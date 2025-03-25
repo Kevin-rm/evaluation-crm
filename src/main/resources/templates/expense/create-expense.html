@@ -91,6 +91,10 @@
                                         <input type="date" id="date" th:field="*{expenseDate}" class="form-control"
                                                required>
                                     </div>
+                                    <div class="input-group">
+                                        <span class="text-danger font-weight-bold"
+                                              th:if="${#fields.hasErrors('expenseDate')}" th:errors="*{expenseDate}"></span>
+                                    </div>
 
                                     <button type="submit" class="btn btn-primary m-t-20"
                                             th:text="${expense.id != null ? 'Update expense' : 'Create expense'}">
@@ -154,11 +158,12 @@
         document.addEventListener("DOMContentLoaded", () => {
             const alertMessageDiv = document.getElementById("alertMessage");
 
+            const currentBudgetAmount = parseFloat(budgetSummary.currentAmount);
             if (budgetSummary.status && budgetSummary.status === "WARNING") {
                 alertMessageDiv.innerHTML = `
                     <strong>The budget alert threshold of ${budgetSummary.alertThreshold} has been reached!</strong><br>
                     Initial Amount: ${budgetSummary.initialAmount}<br>
-                    Current Available Amount: ${budgetSummary.currentAmount}<br>
+                    Current Available Amount: ${currentBudgetAmount}<br>
                 `;
                 alertMessageDiv.style.display = "block";
             } else alertMessageDiv.style.display = "none";
@@ -166,9 +171,7 @@
             document.getElementById("expenseForm").addEventListener("submit", function(e) {
                 e.preventDefault();
 
-                if (parseFloat(document.getElementById("amount").value) >
-                    parseFloat(budgetSummary.currentAmount)) {
-
+                if (parseFloat(document.getElementById("amount").value) > currentBudgetAmount) {
                     if (confirm("The entered amount exceeds the available budget. Do you want to continue anyway?"))
                         this.submit();
                 } else this.submit();
