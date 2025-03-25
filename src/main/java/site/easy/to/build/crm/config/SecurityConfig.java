@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,17 +25,14 @@ public class SecurityConfig {
 
     private final CustomerUserDetails customerUserDetails;
 
-    private final Environment environment;
-
     @Autowired
     public SecurityConfig(OAuthLoginSuccessHandler oAuth2LoginSuccessHandler, CustomOAuth2UserService oauthUserService,
             CrmUserDetails crmUserDetails,
-            CustomerUserDetails customerUserDetails, Environment environment) {
+            CustomerUserDetails customerUserDetails) {
         this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
         this.oauthUserService = oauthUserService;
         this.crmUserDetails = crmUserDetails;
         this.customerUserDetails = customerUserDetails;
-        this.environment = environment;
     }
 
     @Bean
@@ -48,12 +44,11 @@ public class SecurityConfig {
 
 
         http.csrf((csrf) -> csrf
-                .csrfTokenRepository(httpSessionCsrfTokenRepository)
-                .ignoringRequestMatchers("/api/**"));
+            .csrfTokenRepository(httpSessionCsrfTokenRepository)
+            .ignoringRequestMatchers("/api/**/**"));
 
         http.authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers("/api/**").permitAll()
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/**/**").permitAll()
                 .requestMatchers("/register/**").permitAll()
                 .requestMatchers("/set-employee-password/**").permitAll()
                 .requestMatchers("/change-password/**").permitAll()

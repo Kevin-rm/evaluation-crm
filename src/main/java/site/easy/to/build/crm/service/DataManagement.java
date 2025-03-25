@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class DataHandler {
+public class DataManagement {
     private static final String RESET_DATA_SQL_FILEPATH = "sql/reset_data.sql";
     private static final String RESET_DATA_SQL_FILE_CONTENTS;
 
@@ -30,7 +30,7 @@ public class DataHandler {
                 "the contents of file \"%s\"", RESET_DATA_SQL_FILEPATH), e);
         }
     }
-    
+
     public boolean resetData() {
         try {
             jdbcTemplate.execute(RESET_DATA_SQL_FILE_CONTENTS);
