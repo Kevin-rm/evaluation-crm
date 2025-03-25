@@ -11,23 +11,6 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
     List<Budget> findByCustomerCustomerId(Integer customerId);
 
     @Query(value = """
-        SELECT b.initialAmount,
-               (b.initialAmount - COALESCE(e.totalExpense, 0)) AS currentAmount,
-               b.customer_id
-        FROM (SELECT customer_id, SUM(amount) AS initialAmount
-             FROM budget
-             WHERE customer_id = :customerId
-             GROUP BY customer_id) b
-                LEFT JOIN
-            (SELECT customer_id, SUM(amount) AS totalExpense
-             FROM expense
-             WHERE customer_id = :customerId
-             GROUP BY customer_id) e
-            ON b.customer_id = e.customer_id
-    """, nativeQuery = true)
-    Object getBudgetsAfterExpenseRawGlobal(Integer customerId);
-
-    @Query(value = """
         SELECT b.customer_id,
                b.initialAmount,
                b.initialAmount - COALESCE((
