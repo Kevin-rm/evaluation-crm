@@ -1,6 +1,7 @@
 package site.easy.to.build.crm.controller.api;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +12,10 @@ import site.easy.to.build.crm.service.budget.ParameterService;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/management")
-@AllArgsConstructor
-public class BudgetManagementRestController {
+public class BudgetController {
 
     private final BudgetService budgetService;
     private final ParameterService parameterService;
