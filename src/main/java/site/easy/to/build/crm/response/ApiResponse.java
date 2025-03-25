@@ -1,9 +1,12 @@
 package site.easy.to.build.crm.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
@@ -11,6 +14,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder(access = AccessLevel.PRIVATE)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
     private Integer statusCode;
     private String  status;
@@ -20,7 +24,12 @@ public class ApiResponse<T> {
     private T data;
     @Nullable
     private Object errors;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     private final LocalDateTime datetime = LocalDateTime.now();
+
+    public ResponseEntity<ApiResponse<?>> toResponseEntity() {
+        return ResponseEntity.status(statusCode).body(this);
+    }
 
     public static <T> ApiResponse<T> create(
         HttpStatus httpStatus, @Nullable String message, @Nullable T data, @Nullable Object errors

@@ -30,14 +30,12 @@ public class SecurityController {
         @Valid @RequestBody LoginRequest request,
         BindingResult bindingResult
     ) {
-        if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(ApiResponse.error(
-            "Validation failed", ApiUtils.validationErrorsToMap(bindingResult)
-        ));
+        if (bindingResult.hasErrors()) return ApiResponse.error(
+            "Validation failed", ApiUtils.validationErrorsToMap(bindingResult)).toResponseEntity();
 
         User user = userService.findByEmail(request.getEmail());
         return user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword()) ?
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ApiResponse.error(HttpStatus.UNAUTHORIZED, "Identifiant invalide")) :
-            ResponseEntity.ok(ApiResponse.success("Login successful", UserDTO.createFromUser(user)));
+            ApiResponse.error(HttpStatus.UNAUTHORIZED, "Invalid credentials").toResponseEntity() :
+            ApiResponse.success("Login successful", UserDTO.createFromUser(user)).toResponseEntity();
     }
 }
