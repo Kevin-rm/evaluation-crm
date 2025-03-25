@@ -1,0 +1,19 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE `trigger_lead`;
+TRUNCATE TABLE `trigger_ticket`;
+TRUNCATE TABLE `trigger_contract`;
+TRUNCATE TABLE `file`;
+TRUNCATE TABLE `google_drive_file`;
+TRUNCATE TABLE `customer`;
+TRUNCATE TABLE `customer_login_info`;
+
+ALTER TABLE `trigger_lead` AUTO_INCREMENT=56;
+ALTER TABLE `trigger_ticket` AUTO_INCREMENT=47;
+ALTER TABLE `trigger_contract` AUTO_INCREMENT=19;
+ALTER TABLE `file` AUTO_INCREMENT=140;
+ALTER TABLE `google_drive_file` AUTO_INCREMENT=52;
+ALTER TABLE `customer` AUTO_INCREMENT=43;
+ALTER TABLE `customer_login_info` AUTO_INCREMENT=19;
+
+SET FOREIGN_KEY_CHECKS = 1;
