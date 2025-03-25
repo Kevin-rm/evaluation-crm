@@ -140,6 +140,7 @@
     <script th:inline="javascript">
         var home = /*[[${home}]]*/ null;
         var budgetSummary = /*[[${budgetSummary}]]*/ null;
+        var isUpdateMode = /*[[${expense.id != null}]]*/ false;
     </script>
     <script th:src="@{/js/library/jquery-3.2.1.min.js}" type="text/javascript"></script>
     <!-- Bootstrap tether Core JavaScript -->
@@ -168,9 +169,8 @@
                 alertMessageDiv.style.display = "block";
             } else alertMessageDiv.style.display = "none";
 
-            document.getElementById("expenseForm").addEventListener("submit", (e) => {
-                const isUpdate = /*[[${expense.id != null}]]*/ false;
-                if (isUpdate) return true;
+            document.getElementById("expenseForm").addEventListener("submit", function(e) {
+                if (isUpdateMode) return true;
 
                 e.preventDefault();
                 if (parseFloat(document.getElementById("amount").value) > currentBudgetAmount) {
