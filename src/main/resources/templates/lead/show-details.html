@@ -90,20 +90,30 @@
                                         <p class="text-muted" th:text="${lead.employee.username}"></p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-2 col-xs-6 b-r"> <strong>Expense Amount</strong>
-                                        <br>
-                                        <p class="text-muted
-                                            " th:text="${lead.expense != null ? lead.expense.amount : 'No Expense'}"></p>
+                                <div class="row" th:with="expense=${lead.expense}" th:switch="${expense != null}">
+                                    <div th:case="false">
+                                        <div class="col-md-8 col-xs-12">
+                                            <strong>Expense</strong>
+                                            <br>
+                                            <p class="text-muted">No Expense</p>
+                                        </div>
                                     </div>
-                                    <div class="col-md-2 col-xs-6 b-r"> <strong>Expense Date</strong>
-                                        <br>
-                                        <p class="text-muted" th:text="${lead.expense != null ? lead.expense.expenseDate : 'No Expense'}"></p>
-                                    </div>
-                                    <div class="col-md-4 col-xs-6"> <strong>Expense Description</strong>
-                                        <br>
-                                        <p class="text-muted
-                                            " th:text="${lead.expense != null ? lead.expense.description : 'No Expense'}"></p>
+                                    <div th:case="true">
+                                        <div class="col-md-2 col-xs-6 b-r">
+                                            <strong>Expense Amount</strong>
+                                            <br>
+                                            <p class="text-muted" th:text="${expense.amount}"></p>
+                                        </div>
+                                        <div class="col-md-2 col-xs-6 b-r">
+                                            <strong>Expense Date</strong>
+                                            <br>
+                                            <p class="text-muted" th:text="${expense.expenseDate}"></p>
+                                        </div>
+                                        <div class="col-md-4 col-xs-6">
+                                            <strong>Expense Description</strong>
+                                            <br>
+                                            <p class="text-muted" th:text="${expense.description}"></p>
+                                        </div>
                                     </div>
                                 </div>
                                 <hr>
