@@ -26,8 +26,8 @@ public class BudgetController {
         return ApiResponse.success(budgetService.getAll()).toResponseEntity();
     }
 
-    @GetMapping("/budget/customer/{customerId}")
-    public ResponseEntity<List<Budget>> getBudget(@PathVariable Integer customerId) {
+    @GetMapping("/by-customer/{customerId}")
+    public ResponseEntity<List<Budget>> getByCustomer(@PathVariable Integer customerId) {
         List<Budget> budget = budgetService.getByCustomer(customerId);
         return new ResponseEntity<>(budget, HttpStatus.OK);
     }
