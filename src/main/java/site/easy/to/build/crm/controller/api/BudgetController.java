@@ -1,31 +1,29 @@
 package site.easy.to.build.crm.controller.api;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.entity.Budget;
-import site.easy.to.build.crm.entity.Parameter;
+import site.easy.to.build.crm.response.ApiResponse;
 import site.easy.to.build.crm.service.BudgetService;
-import site.easy.to.build.crm.service.budget.ParameterService;
+import site.easy.to.build.crm.service.settings.BudgetSettingsService;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/management")
+@RequestMapping("/api/budgets")
 public class BudgetController {
 
     private final BudgetService budgetService;
-    private final ParameterService parameterService;
+    private final BudgetSettingsService budgetSettingsService;
 
-
-    // Get
-    @GetMapping("/budget")
-    public ResponseEntity<List<Budget>> getBudgets() {
-        List<Budget> budgets = budgetService.findAll();
-        return new ResponseEntity<>(budgets, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<Budget>>> getAll() {
+        return ApiResponse.success(budgetService.getAll()).toResponseEntity();
     }
 
     @GetMapping("/budget/customer/{customerId}")
@@ -34,42 +32,17 @@ public class BudgetController {
         return new ResponseEntity<>(budget, HttpStatus.OK);
     }
 
-
-    // Mise à jour du montant d'un budget
-    @PutMapping("/budget/{id}/amount")
-    public ResponseEntity<Budget> updateBudgetAmount(
-            @PathVariable Integer id,
-            @RequestParam Double amount) {
-        Budget budget = budgetService.findById(id);
-        if (budget == null) {
-            return ResponseEntity.notFound().build();
-        }
-        budget.setAmount(amount);
-        return ResponseEntity.ok(budgetService.save(budget));
+    @GetMapping("/alert-threshold")
+    public ResponseEntity<ApiResponse<Map<String, BigDecimal>>> getAlertThreshold() {
+        return ApiResponse.success(Map.of("alert-threshold",
+            budgetSettingsService.getDefault().getAlertThreshold()
+        )).toResponseEntity();
     }
 
+    @PutMapping("/alert-threshold")
+    public ResponseEntity<ApiResponse<Object>> updateThresholdAlert(@RequestBody BigDecimal value) {
+        budgetSettingsService.updateDefaultAlertThreshold(value);
 
-    // Suppression d'un budget
-    @DeleteMapping("/budget/{id}")
-    public ResponseEntity<Void> deleteBudget(@PathVariable Integer id) {
-        Budget budget = budgetService.findById(id);
-        if (budget == null) {
-            return ResponseEntity.notFound().build();
-        }
-        budgetService.delete(budget);
-        return ResponseEntity.ok().build();
-    }
-
-///  Parameter api
-    @PutMapping("/threshold")
-    public ResponseEntity<Parameter> updateThresholdAlert(@RequestParam Double value) {
-        Parameter parameter = parameterService.updateThresholdAlert(value);
-        return ResponseEntity.ok(parameter);
-    }
-
-    // Obtention du seuil d'alerte actuel
-    @GetMapping("/threshold")
-    public ResponseEntity<Parameter> getThresholdAlert() {
-        return ResponseEntity.ok(parameterService.findThresholdAlert());
+        return ApiResponse.success("Alert threshold successfully updated").toResponseEntity();
     }
 }

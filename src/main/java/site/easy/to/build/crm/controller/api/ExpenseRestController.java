@@ -21,7 +21,6 @@ public class ExpenseRestController {
     private final LeadService leadService;
     private final TicketService ticketService;
 
-
     // GET DATA
     @GetMapping("")
     public ResponseEntity<List<Expense>> getExpenses() {

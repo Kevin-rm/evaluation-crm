@@ -27,7 +27,7 @@ public class ApiResponse<T> {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     private final LocalDateTime datetime = LocalDateTime.now();
 
-    public ResponseEntity<ApiResponse<?>> toResponseEntity() {
+    public ResponseEntity<ApiResponse<T>> toResponseEntity() {
         return ResponseEntity.status(statusCode).body(this);
     }
 
@@ -51,6 +51,10 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> success(String message, T data) {
         return success(HttpStatus.OK, message, data);
+    }
+
+    public static <T> ApiResponse<T> success(String message) {
+        return success(message, null);
     }
 
     public static <T> ApiResponse<T> success(T data) {

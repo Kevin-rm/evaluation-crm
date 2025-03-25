@@ -27,7 +27,7 @@ public class BudgetService {
         return budgetRepository.findById(id).orElse(null);
     }
 
-    public List<Budget> findAll() {
+    public List<Budget> getAll() {
         return budgetRepository.findAll();
     }
 

@@ -26,7 +26,7 @@ public class SecurityController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<?>> login(
+    public ResponseEntity<? extends ApiResponse<?>> login(
         @Valid @RequestBody LoginRequest request,
         BindingResult bindingResult
     ) {
