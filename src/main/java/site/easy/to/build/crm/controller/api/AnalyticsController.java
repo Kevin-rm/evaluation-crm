@@ -15,7 +15,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5000")
 public class AnalyticsController {
     
     private final ExpenseService expenseService;

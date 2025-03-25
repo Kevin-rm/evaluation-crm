@@ -10,6 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import site.easy.to.build.crm.dto.CustomerBudgetSummaryDTO;
 import site.easy.to.build.crm.entity.*;
 import site.easy.to.build.crm.service.BudgetService;
+import site.easy.to.build.crm.service.ExpenseService;
 import site.easy.to.build.crm.service.lead.LeadService;
 import site.easy.to.build.crm.service.ticket.TicketService;
 
@@ -21,6 +22,7 @@ public class ExpenseController {
     private final BudgetService budgetService;
     private final LeadService leadService;
     private final TicketService ticketService;
+    private final ExpenseService expenseService;
 
     @GetMapping("/form")
     public String showCreateForm(
@@ -77,6 +79,8 @@ public class ExpenseController {
             if (lead == null) return "error/not-found";
 
             expense.setCustomer(lead.getCustomer());
+            expenseService.save(expense);
+
             lead.setExpense(expense);
             leadService.save(lead);
 
@@ -86,6 +90,8 @@ public class ExpenseController {
             if (ticket == null) return "error/not-found";
 
             expense.setCustomer(ticket.getCustomer());
+            expenseService.save(expense);
+
             ticket.setExpense(expense);
             ticketService.save(ticket);
 
