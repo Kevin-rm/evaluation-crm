@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import site.easy.to.build.crm.dto.UserDTO;
 import site.easy.to.build.crm.entity.User;
 import site.easy.to.build.crm.request.LoginRequest;
 import site.easy.to.build.crm.response.ApiResponse;
@@ -37,6 +38,6 @@ public class SecurityController {
         return user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword()) ?
             ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(ApiResponse.error(HttpStatus.UNAUTHORIZED, "Identifiant invalide")) :
-            ResponseEntity.ok(ApiResponse.success("Login successful", user));
+            ResponseEntity.ok(ApiResponse.success("Login successful", UserDTO.createFromUser(user)));
     }
 }
