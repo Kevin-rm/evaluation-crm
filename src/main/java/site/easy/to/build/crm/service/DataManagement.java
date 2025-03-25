@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 @Service
 public class DataManagement {
-    private static final String RESET_DATA_SQL_FILEPATH = "sql/reset_data.sql";
+    private static final String RESET_DATA_SQL_FILEPATH = "sql/reset-data.sql";
     private static final String RESET_DATA_SQL_FILE_CONTENTS;
 
     private final JdbcTemplate jdbcTemplate;
