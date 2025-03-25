@@ -1,6 +1,7 @@
 package site.easy.to.build.crm.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,10 +25,13 @@ public class Expense {
     private String description;
 
     @Setter
+    @NotNull(message = "Amount is required")
+    @Positive(message = "Amount must be positive")
     @Column(nullable = false)
     private Double amount;
 
     @Setter
+    @NotNull(message = "Expense date is required")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(nullable = false)
     private LocalDate expenseDate;
