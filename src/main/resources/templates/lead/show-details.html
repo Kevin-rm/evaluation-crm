@@ -91,14 +91,14 @@
                                     </div>
                                 </div>
                                 <div class="row" th:with="expense=${lead.expense}" th:switch="${expense != null}">
-                                    <div th:case="false">
+                                    <th:block th:case="false">
                                         <div class="col-md-8 col-xs-12">
                                             <strong>Expense</strong>
                                             <br>
                                             <p class="text-muted">No Expense</p>
                                         </div>
-                                    </div>
-                                    <div th:case="true">
+                                    </th:block>
+                                    <th:block th:case="true">
                                         <div class="col-md-2 col-xs-6 b-r">
                                             <strong>Expense Amount</strong>
                                             <br>
@@ -114,7 +114,7 @@
                                             <br>
                                             <p class="text-muted" th:text="${expense.description}"></p>
                                         </div>
-                                    </div>
+                                    </th:block>
                                 </div>
                                 <hr>
                                 <div class="row">
