@@ -20,7 +20,7 @@ import site.easy.to.build.crm.service.settings.TicketEmailSettingsService;
 import site.easy.to.build.crm.service.ticket.TicketService;
 import site.easy.to.build.crm.service.user.UserService;
 import site.easy.to.build.crm.util.*;
-import site.easy.to.build.crm.service.budget.ExpenseService;
+import site.easy.to.build.crm.service.ExpenseService;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -391,37 +391,5 @@ public class TicketController {
                 }
             }
         }
-    }
-
-    @PostMapping("/update-expense")
-    public String updateTicketExpense(@RequestParam("ticketId") int ticketId,
-                                      @RequestParam("expenseId") int expenseId,
-                                      Authentication authentication) {
-        int userId = authenticationUtils.getLoggedInUserId(authentication);
-        User loggedInUser = userService.findById(userId);
-        if (loggedInUser.isInactiveUser()) {
-            return "error/account-inactive";
-        }
-
-        Ticket ticket = ticketService.findByTicketId(ticketId);
-        if (ticket == null) {
-            return "error/not-found";
-        }
-
-        User employee = ticket.getEmployee();
-        if (!AuthorizationUtil.checkIfUserAuthorized(employee, loggedInUser)
-                && !AuthorizationUtil.hasRole(authentication, "ROLE_MANAGER")) {
-            return "error/access-denied";
-        }
-
-        Expense expense = expenseService.findById(expenseId);
-        if (expense == null) {
-            return "error/not-found";
-        }
-
-        ticket.setExpense(expense);
-        ticketService.save(ticket);
-
-        return "redirect:/employee/ticket/show-ticket/" + ticketId;
     }
 }

@@ -1,65 +1,75 @@
 package site.easy.to.build.crm.controller;
 
-import org.springframework.security.core.Authentication;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import site.easy.to.build.crm.entity.Budget;
 import site.easy.to.build.crm.entity.Customer;
-import site.easy.to.build.crm.service.budget.BudgetService;
+import site.easy.to.build.crm.service.BudgetService;
 import site.easy.to.build.crm.service.customer.CustomerService;
-import site.easy.to.build.crm.util.AuthenticationUtils;
 
-import lombok.AllArgsConstructor;
-import site.easy.to.build.crm.util.AuthorizationUtil;
-
-import java.util.List;
-
+@RequiredArgsConstructor
 @Controller
-@RequestMapping("/budget")
-@AllArgsConstructor
+@RequestMapping("/employee/budget")
 public class BudgetController {
 
     private final BudgetService budgetService;
     private final CustomerService customerService;
-    private final AuthenticationUtils authenticationUtils;
 
     @GetMapping("/create/{customerId}")
-    public String showCreateBudgetForm(@PathVariable("customerId") int customerId, Model model) {
+    public String showCreateBudgetForm(@PathVariable Integer customerId, Model model) {
         Customer customer = customerService.findByCustomerId(customerId);
-        if (customer == null) {
-            return "error/not-found";
+        if (customer == null) return "error/not-found";
+
+        if (!model.containsAttribute("budget")) {
+            Budget budget = new Budget();
+            budget.setCustomer(customer);
+
+            model.addAttribute("budget", budget);
         }
 
-        Budget budget = new Budget();
-        budget.setCustomer(customer);
-        model.addAttribute("budget", budget);
         return "budget/create-budget";
     }
 
-    @PostMapping("/create-budget")
-    public String createBudget(@ModelAttribute("budget") Budget budget) {
+    @PostMapping("/create/{customerId}")
+    public String createBudget(
+        @PathVariable Integer customerId,
+        @Valid @ModelAttribute Budget budget,
+        BindingResult bindingResult,
+        RedirectAttributes redirectAttributes
+    ) {
+        Customer customer = customerService.findByCustomerId(customerId);
+        if (customer == null) return "error/not-found";
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.budget", bindingResult);
+            redirectAttributes.addFlashAttribute("budget", budget);
+
+            return "redirect:/employee/budget/create/" + customerId;
+        }
+
         try {
+            budget.setCustomer(customer);
             budgetService.save(budget);
-            return "redirect:/employee/customer/" + budget.getCustomer().getCustomerId();
+
+            return "redirect:/employee/customer/" + customerId;
         } catch (Exception e) {
             return "error/500";
         }
     }
 
-    @GetMapping("/list/{customerId}")
-    public String listBudgets(@PathVariable("customerId") int customerId, Model model) {
+    @GetMapping("/customer/{customerId}")
+    public String budgetsByCustomer(@PathVariable Integer customerId, Model model) {
         Customer customer = customerService.findByCustomerId(customerId);
-        if (customer == null) {
-            return "error/not-found";
-        }
+        if (customer == null) return "error/not-found";
 
-
-        List<Budget> budgets = budgetService.findBudgetsByCustomerId(customerId);
-
-        model.addAttribute("budgets", budgets);
+        model.addAttribute("budgets", budgetService.getByCustomer(customerId));
         model.addAttribute("customer", customer);
 
-        return "budget/budget-list";
+        return "budget/customer-budgets";
     }
 }
