@@ -24,9 +24,9 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class DatabaseCustomUtil {
 
-    private JdbcTemplate jdbcTemplate;
     private final Faker faker = new Faker();
     private final PasswordEncoder passwordEncoder;
+    private JdbcTemplate jdbcTemplate;
     @PersistenceContext
     private EntityManager entityManager;
     // service
@@ -38,21 +38,21 @@ public class DatabaseCustomUtil {
 
         // Liste des tables à supprimer
         List<String> tables = List.of(
-                "contract_settings",
-                "email_template",
-                "employee",
-                "file",
-                "google_drive_file",
-                "lead_action",
-                "lead_settings",
-                "ticket_settings",
-                "trigger_lead",
-                "trigger_ticket",
-                "trigger_contract",
-                "customer",
-                "customer_login_info",
-                "expense",
-                "budget");
+            "contract_settings",
+            "email_template",
+            "employee",
+            "file",
+            "google_drive_file",
+            "lead_action",
+            "lead_settings",
+            "ticket_settings",
+            "trigger_lead",
+            "trigger_ticket",
+            "trigger_contract",
+            "customer",
+            "customer_login_info",
+            "expense",
+            "budget");
         tables.forEach(table -> {
             jdbcTemplate.execute("TRUNCATE TABLE " + table);
         });
@@ -106,8 +106,9 @@ public class DatabaseCustomUtil {
 
         return customerLoginInfos;
     }
+
     public List<Budget> buildBudget(List<BudgetDtoCsv> budgetDtoCsvs, HashMap<String, Integer> mapCustomer,
-            StringBuilder errorMessage) {
+                                    StringBuilder errorMessage) {
         List<Budget> budgets = new ArrayList<>();
         List<String> errors = new ArrayList<>(); // Collect errors here
 
@@ -118,7 +119,7 @@ public class DatabaseCustomUtil {
 
             if (customerId == null) {
                 errors.add(String.format("BudgetCsv Row %d: Customer email '%s' not found for budget.", i + 2,
-                        budgetDtoCsv.getCustomerEmail()));
+                    budgetDtoCsv.getCustomerEmail()));
             } else {
                 Customer customer = new Customer();
                 customer.setCustomerId(customerId);
@@ -143,21 +144,21 @@ public class DatabaseCustomUtil {
     }
 
     public List<Ticket> buildTicket(List<TicketLeadDtoCsv> ticketLeadDtoCsvs, HashMap<String, Integer> mapCustomer,
-            StringBuilder errorMessage) {
+                                    StringBuilder errorMessage) {
         User admin = userService.findFirst();
         List<Ticket> tickets = new ArrayList<>();
         List<String> errors = new ArrayList<>();
-        String[] priorities = { "low","medium","high","closed","urgent","critical" };
+        String[] priorities = {"low", "medium", "high", "closed", "urgent", "critical"};
         for (int i = 0; i < ticketLeadDtoCsvs.size(); i++) {
             TicketLeadDtoCsv ticketLeadDtoCsv = ticketLeadDtoCsvs.get(i);
             if (ticketLeadDtoCsv.getType().equalsIgnoreCase("ticket")
-                    || ticketLeadDtoCsv.getType().equalsIgnoreCase("tickets")) {
+                || ticketLeadDtoCsv.getType().equalsIgnoreCase("tickets")) {
                 Ticket ticket = new Ticket();
                 Integer customerId = mapCustomer.get(ticketLeadDtoCsv.getCustomerEmail());
 
                 if (customerId == null) {
                     errors.add(String.format("ticketLeadCsv Row %d: Customer email '%s' not found.", i + 2,
-                            ticketLeadDtoCsv.getCustomerEmail()));
+                        ticketLeadDtoCsv.getCustomerEmail()));
                 } else {
                     Expense expense = new Expense();
                     expense.setAmount(ticketLeadDtoCsv.getExpense());
@@ -192,7 +193,7 @@ public class DatabaseCustomUtil {
     }
 
     public List<Lead> buildLead(List<TicketLeadDtoCsv> ticketLeadDtoCsvs, HashMap<String, Integer> mapCustomer,
-            StringBuilder errorMessage) {
+                                StringBuilder errorMessage) {
         User admin = userService.findFirst();
         List<Lead> leads = new ArrayList<>();
         List<String> errors = new ArrayList<>();
@@ -200,13 +201,13 @@ public class DatabaseCustomUtil {
         for (int i = 0; i < ticketLeadDtoCsvs.size(); i++) {
             TicketLeadDtoCsv ticketLeadDtoCsv = ticketLeadDtoCsvs.get(i);
             if (ticketLeadDtoCsv.getType().equalsIgnoreCase("lead")
-                    || ticketLeadDtoCsv.getType().equalsIgnoreCase("leads")) {
+                || ticketLeadDtoCsv.getType().equalsIgnoreCase("leads")) {
                 Lead lead = new Lead();
                 Integer customerId = mapCustomer.get(ticketLeadDtoCsv.getCustomerEmail());
 
                 if (customerId == null) {
                     errors.add(String.format("ticketLeadCsv Row %d: Customer email '%s' not found.", i + 2,
-                            ticketLeadDtoCsv.getCustomerEmail()));
+                        ticketLeadDtoCsv.getCustomerEmail()));
                 } else {
                     Expense expense = new Expense();
                     expense.setAmount(ticketLeadDtoCsv.getExpense());
@@ -239,7 +240,7 @@ public class DatabaseCustomUtil {
 
     @Transactional(rollbackFor = SQLDataException.class)
     public void importCsvAndSave(List<BudgetDtoCsv> budgetDtoCsvs, List<TicketLeadDtoCsv> ticketLeadDtoCsvs,
-            List<CustomerDtoCsv> customerDtoCsvs) throws SQLDataException {
+                                 List<CustomerDtoCsv> customerDtoCsvs) throws SQLDataException {
         StringBuilder errorMessage = new StringBuilder();
         HashMap<String, Integer> mapCustomer = new HashMap<>();
 
@@ -357,8 +358,8 @@ public class DatabaseCustomUtil {
     public List<Ticket> generateRandomTickets(List<Customer> customers, int count) {
         User admin = userService.findFirst();
         List<Ticket> tickets = new ArrayList<>();
-        String[] statuses = { "open","assigned","on-hold","in-progress","resolved","closed","reopened","pending-customer-response","escalated","archived" };
-        String[] priorities = { "low","medium","high","closed","urgent","critical" };
+        String[] statuses = {"open", "assigned", "on-hold", "in-progress", "resolved", "closed", "reopened", "pending-customer-response", "escalated", "archived"};
+        String[] priorities = {"low", "medium", "high", "closed", "urgent", "critical"};
 
         for (Customer customer : customers) {
             for (int i = 0; i < count; i++) {
@@ -397,7 +398,7 @@ public class DatabaseCustomUtil {
     public List<Lead> generateRandomLeads(List<Customer> customers, int count) {
         User admin = userService.findFirst();
         List<Lead> leads = new ArrayList<>();
-        String[] statuses = { "meeting-to-schedule","scheduled","archived","success","assign-to-sales"};
+        String[] statuses = {"meeting-to-schedule", "scheduled", "archived", "success", "assign-to-sales"};
 
         for (Customer customer : customers) {
             for (int i = 0; i < count; i++) {
@@ -436,7 +437,7 @@ public class DatabaseCustomUtil {
      */
     @Transactional(rollbackFor = SQLDataException.class)
     public Map<String, Integer> generateAndSaveRandomData(int customerCount, int budgetPerCustomer,
-            int ticketPerCustomer, int leadPerCustomer) throws SQLDataException {
+                                                          int ticketPerCustomer, int leadPerCustomer) throws SQLDataException {
         try {
             // 1. Générer et sauvegarder les clients
             List<CustomerLoginInfo> customerLoginInfos = generateRandomCustomers(customerCount);

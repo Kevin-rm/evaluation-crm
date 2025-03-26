@@ -1,11 +1,9 @@
 package site.easy.to.build.crm.DTO;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import site.easy.to.build.crm.entity.Customer;
 
 import java.time.LocalDate;
 
@@ -13,7 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class  BudgetDTO {
+public class BudgetDTO {
     private Integer budgetId;
     private String title;
     private Double initialAmount;

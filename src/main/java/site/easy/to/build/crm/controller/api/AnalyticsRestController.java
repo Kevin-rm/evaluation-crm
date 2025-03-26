@@ -1,7 +1,9 @@
 package site.easy.to.build.crm.controller.api;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import site.easy.to.build.crm.DTO.DashboardDTO;
 import site.easy.to.build.crm.service.budget.BudgetService;
 import site.easy.to.build.crm.service.budget.ExpenseService;
@@ -16,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/api")
 @AllArgsConstructor
 public class AnalyticsRestController {
-    
+
     private final ExpenseService expenseService;
     private final BudgetService budgetService;
     private final CustomerService customerService;
@@ -24,7 +26,7 @@ public class AnalyticsRestController {
 
     @GetMapping("/dashboard")
     public DashboardDTO getDashboardData() {
-        Map<String, Double> ticketExpensesByCustomer =expenseService.getTicketExpensesByCustomer();
+        Map<String, Double> ticketExpensesByCustomer = expenseService.getTicketExpensesByCustomer();
         Map<String, Double> leadExpensesByCustomer = expenseService.getLeadExpensesByCustomer();
         Map<String, Double> budgetsByCustomer = budgetService.getBudgetsByCustomer();
         Double totalTicketExpenses = expenseService.getTotalTicketExpenses().doubleValue();
@@ -32,7 +34,7 @@ public class AnalyticsRestController {
         Double totalBudgets = budgetService.getTotalBudget().doubleValue();
 
         return new DashboardDTO(ticketExpensesByCustomer, leadExpensesByCustomer, budgetsByCustomer,
-                totalTicketExpenses, totalLeadExpenses, totalBudgets);
+            totalTicketExpenses, totalLeadExpenses, totalBudgets);
     }
 
 

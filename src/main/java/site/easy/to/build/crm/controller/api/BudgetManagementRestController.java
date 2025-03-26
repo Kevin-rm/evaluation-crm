@@ -44,12 +44,13 @@ public class BudgetManagementRestController {
         return ResponseEntity.ok().build();
     }
 
-///  Parameter api
+    ///  Parameter api
     @PutMapping("/threshold")
     public ResponseEntity<Parameter> updateThresholdAlert(@RequestParam Double value) {
         Parameter parameter = parameterService.updateThresholdAlert(value);
         return ResponseEntity.ok(parameter);
     }
+
     // Obtention du seuil d'alerte actuel
     @GetMapping("/threshold")
     public ResponseEntity<Parameter> getThresholdAlert() {

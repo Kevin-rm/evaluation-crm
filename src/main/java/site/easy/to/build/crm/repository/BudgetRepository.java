@@ -3,7 +3,6 @@ package site.easy.to.build.crm.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import site.easy.to.build.crm.DTO.BudgetDTO;
 import site.easy.to.build.crm.entity.Budget;
 import site.easy.to.build.crm.entity.Customer;
 
@@ -13,9 +12,9 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
     List<Budget> findBudgetByCustomer(Customer customer);
 
     @Query("""
-                select COALESCE(SUM(b.amount),0)  from Budget b where b.customer.customerId = :customerId
-            """)
-    public double getTotalBudgetByCustomer(@Param("customerId") Integer customerId);
+            select COALESCE(SUM(b.amount),0)  from Budget b where b.customer.customerId = :customerId
+        """)
+    double getTotalBudgetByCustomer(@Param("customerId") Integer customerId);
 
 //    @Query(value = """
 //            SELECT
@@ -32,7 +31,6 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
 //            GROUP BY b.budget_id, b.title, b.start_date, b.end_date, b.customer_id,b.amount
 //            """, nativeQuery = true)
 //    List<Object[]> getBudgetsAfterExpenseRaw(@Param("customerId") Integer customerId);
-
 
 
 }

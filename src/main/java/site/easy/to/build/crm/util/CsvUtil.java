@@ -8,10 +8,6 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import site.easy.to.build.crm.DTO.CustomerDtoCsv;
-import site.easy.to.build.crm.entity.Customer;
-import site.easy.to.build.crm.entity.User;
-import site.easy.to.build.crm.service.user.UserService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +47,6 @@ public class CsvUtil {
         errorBuilder.append("</ul></div>");
         return errorBuilder.toString();
     }
-
 
 
 }

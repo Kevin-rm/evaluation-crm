@@ -32,7 +32,7 @@ public class TicketRestController {
         } else {
             ticketService.delete(ticket);
         }
-        if (ticket.getExpense()== null) {
+        if (ticket.getExpense() == null) {
             return ResponseEntity.notFound().build();
         }
 
@@ -44,6 +44,7 @@ public class TicketRestController {
         }
         return ResponseEntity.ok().build();
     }
+
     @PutMapping("")
     public ResponseEntity<Ticket> updateAmountTicket(@RequestBody Ticket ticket) {
         Ticket ticketVerif = ticketService.findByTicketId(ticket.getTicketId());

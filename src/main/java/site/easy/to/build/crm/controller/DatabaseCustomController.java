@@ -24,13 +24,13 @@ public class DatabaseCustomController {
 
     @PostMapping("/generate")
     public String generateData(
-            @RequestParam int customerCount,
-            @RequestParam int budgetPerCustomer,
-            @RequestParam int ticketPerCustomer,
-            @RequestParam int leadPerCustomer) throws SQLDataException {
+        @RequestParam int customerCount,
+        @RequestParam int budgetPerCustomer,
+        @RequestParam int ticketPerCustomer,
+        @RequestParam int leadPerCustomer) throws SQLDataException {
 
         Map<String, Integer> results = databaseCustomUtil.generateAndSaveRandomData(
-                customerCount, budgetPerCustomer, ticketPerCustomer, leadPerCustomer);
+            customerCount, budgetPerCustomer, ticketPerCustomer, leadPerCustomer);
 
         return "redirect:/database/generate?success=true";
     }

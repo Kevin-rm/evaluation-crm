@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import site.easy.to.build.crm.customValidations.customer.UniqueEmail;
 
-@JsonPropertyOrder({"customer_email", "subject_or_name","type","status","expense"})
+@JsonPropertyOrder({"customer_email", "subject_or_name", "type", "status", "expense"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class TicketLeadDtoCsv  {
+public class TicketLeadDtoCsv {
 
     @JsonProperty(value = "customer_email")
     @Email(message = "Email is not valid.")
@@ -27,7 +27,7 @@ public class TicketLeadDtoCsv  {
 
     @JsonProperty(value = "type")
     @NotBlank(message = "type is required")
-    @Pattern(regexp = "^(ticket|lead|tickets|leads)$",message = "Type must be either 'ticket' or 'lead'")
+    @Pattern(regexp = "^(ticket|lead|tickets|leads)$", message = "Type must be either 'ticket' or 'lead'")
     public String type;
 
     @JsonProperty(value = "status")
@@ -42,7 +42,7 @@ public class TicketLeadDtoCsv  {
     @AssertTrue(message = "Status is invalid for the provided type")
     public boolean isStatusValid() {
         if ("ticket".equalsIgnoreCase(type) || "tickets".equalsIgnoreCase(type)) {
-             return status.matches("^(open|assigned|on-hold|in-progress|resolved|closed|reopened|pending-customer-response|escalated|archived)$");
+            return status.matches("^(open|assigned|on-hold|in-progress|resolved|closed|reopened|pending-customer-response|escalated|archived)$");
         } else if ("lead".equalsIgnoreCase(type) || "leads".equalsIgnoreCase(type)) {
             return status.matches("^(meeting-to-schedule|scheduled|archived|success|assign-to-sales)$");
         }

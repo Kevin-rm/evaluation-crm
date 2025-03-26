@@ -2,7 +2,10 @@ package site.easy.to.build.crm.service.budget;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import site.easy.to.build.crm.entity.*;
+import site.easy.to.build.crm.entity.Customer;
+import site.easy.to.build.crm.entity.Expense;
+import site.easy.to.build.crm.entity.Lead;
+import site.easy.to.build.crm.entity.Ticket;
 import site.easy.to.build.crm.repository.ExpenseRepository;
 import site.easy.to.build.crm.service.customer.CustomerService;
 import site.easy.to.build.crm.service.lead.LeadService;
@@ -16,10 +19,10 @@ import java.util.Map;
 @AllArgsConstructor
 @Service
 public class ExpenseService {
-    private ExpenseRepository expenseRepository;
     private final TicketService ticketService;
     private final LeadService leadService;
     private final CustomerService customerService;
+    private ExpenseRepository expenseRepository;
 
     public Expense findById(Integer id) {
         return expenseRepository.findById(id).orElse(null);
@@ -79,15 +82,15 @@ public class ExpenseService {
     public BigDecimal getTotalTicketExpenses() {
         List<Expense> expenses = expenseRepository.findAllExpenseByTicketIsNotNull();
         return expenses.stream()
-                .map(expense -> BigDecimal.valueOf(expense.getAmount()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .map(expense -> BigDecimal.valueOf(expense.getAmount()))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotalLeadExpenses() {
         List<Expense> expenses = expenseRepository.findAllExpenseByLeadIsNotNull();
         return expenses.stream()
-                .map(expense -> BigDecimal.valueOf(expense.getAmount()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .map(expense -> BigDecimal.valueOf(expense.getAmount()))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public double getTotalExpenses(Integer customerId) {
@@ -97,7 +100,6 @@ public class ExpenseService {
         totalExpenses = totalLeadExpenses + totalTicketExpense;
         return totalExpenses;
     }
-
 
 
 }

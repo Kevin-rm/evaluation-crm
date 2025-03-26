@@ -14,8 +14,8 @@ import java.util.Map;
 public class DashboardDTO {
 
     public Map<String, Double> ticketExpensesByCustomer;
-    public Map<String,Double> leadExpensesByCustomer;
-    public Map<String,Double> budgetByCustomer;
+    public Map<String, Double> leadExpensesByCustomer;
+    public Map<String, Double> budgetByCustomer;
 
     public Double totalTicketExpenses;
     public Double totalLeadExpenses;

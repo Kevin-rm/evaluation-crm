@@ -15,14 +15,15 @@ import java.util.List;
 @RequestMapping("/api/user")
 @AllArgsConstructor
 public class CustomerRestController {
+    private final PasswordEncoder passwordEncoder;
     private CustomerService customerService;
     private UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/customer")
     public ResponseEntity<List<Customer>> getCustomer() {
         return ResponseEntity.ok(customerService.findAll());
     }
+
     @GetMapping("/employee")
     public ResponseEntity<List<User>> getEmployee() {
         return ResponseEntity.ok(userService.findAll());

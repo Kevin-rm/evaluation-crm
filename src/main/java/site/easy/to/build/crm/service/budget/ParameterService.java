@@ -15,9 +15,10 @@ public class ParameterService {
         return parameterRepository.findById(Key).orElse(null);
     }
 
-    public Parameter findThresholdAlert(){
+    public Parameter findThresholdAlert() {
         return findByKey("thresholdAlertBudget");
     }
+
     public Parameter updateThresholdAlert(@RequestParam Double value) {
         Parameter parameter = findByKey("thresholdAlertBudget");
         parameter.setParameterValue(value);

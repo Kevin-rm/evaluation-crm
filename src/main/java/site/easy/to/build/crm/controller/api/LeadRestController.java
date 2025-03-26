@@ -22,6 +22,7 @@ public class LeadRestController {
     public ResponseEntity<List<Lead>> getLeadALL() {
         return ResponseEntity.ok(leadService.findAll());
     }
+
     @DeleteMapping("")
     public ResponseEntity<Void> deleteLead(@RequestParam("leadId") Integer leadId) {
         Lead lead = leadService.findByLeadId(leadId);
@@ -30,7 +31,7 @@ public class LeadRestController {
         } else {
             leadService.delete(lead);
         }
-        if (lead.getExpense()==null) {
+        if (lead.getExpense() == null) {
             return ResponseEntity.notFound().build();
         }
         Expense expense = expenseService.findById(lead.getExpense().getExpenseId());

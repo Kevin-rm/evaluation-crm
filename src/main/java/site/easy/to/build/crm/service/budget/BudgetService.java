@@ -1,7 +1,6 @@
 package site.easy.to.build.crm.service.budget;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.DTO.BudgetDTO;
 import site.easy.to.build.crm.entity.Budget;
@@ -11,7 +10,6 @@ import site.easy.to.build.crm.repository.BudgetRepository;
 import site.easy.to.build.crm.service.customer.CustomerService;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -70,8 +68,8 @@ public class BudgetService {
             double threshold = budget.getInitialAmount() * parameter.getParameterValue() / 100;
             if (budget.getInitialAmount() - budget.getCurrentAmount() >= threshold) {
                 budget.setStatus("Alerte budget a " + parameter.getParameterValue() + " % "
-                        + "Budget initial : " + budget.getInitialAmount() + "\n" +
-                        "Budget Actuel :  " + budget.getCurrentAmount() + "\n");
+                    + "Budget initial : " + budget.getInitialAmount() + "\n" +
+                    "Budget Actuel :  " + budget.getCurrentAmount() + "\n");
             } else {
                 budget.setStatus("Budget normal");
             }
@@ -99,8 +97,8 @@ public class BudgetService {
         double threshold = budgetDTO.getInitialAmount() * parameter.getParameterValue() / 100;
         if (budgetDTO.getInitialAmount() - budgetDTO.getCurrentAmount() >= threshold) {
             budgetDTO.setStatus("Alerte budget au plafon " + parameter.getParameterValue() + " % \n " +
-                    "Budget initial : " + budgetDTO.getInitialAmount() + "\n" +
-                    "Budget Actuel :  " + budgetDTO.getCurrentAmount() + "\n");
+                "Budget initial : " + budgetDTO.getInitialAmount() + "\n" +
+                "Budget Actuel :  " + budgetDTO.getCurrentAmount() + "\n");
         } else {
             budgetDTO.setStatus("Budget normal");
         }
@@ -121,17 +119,17 @@ public class BudgetService {
     public Map<String, Double> getBudgetsByCustomer() {
         List<Budget> budgets = budgetRepository.findAll();
         return budgets.stream()
-                .collect(Collectors.groupingBy(
-                        budget -> budget.getCustomer().getName(),
-                        Collectors.summingDouble(Budget::getAmount)
-                ));
+            .collect(Collectors.groupingBy(
+                budget -> budget.getCustomer().getName(),
+                Collectors.summingDouble(Budget::getAmount)
+            ));
     }
 
     public BigDecimal getTotalBudget() {
         List<Budget> budgets = budgetRepository.findAll();
         return budgets.stream()
-                .map(budget -> BigDecimal.valueOf(budget.getAmount()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .map(budget -> BigDecimal.valueOf(budget.getAmount()))
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     ///

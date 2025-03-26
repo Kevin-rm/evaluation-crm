@@ -1,7 +1,6 @@
 package site.easy.to.build.crm.controller;
 
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +29,8 @@ public class CsvController {
     public String showImportForm() {
         return "data-modifier/csv/import-csv";
     }
-// process the uploaded files
+
+    // process the uploaded files
     @PostMapping("/import")
     public String handleFileUpload(@RequestParam("customercsv") MultipartFile customerFile,
                                    @RequestParam("ticketleadcsv") MultipartFile ticketLeadFile,
@@ -39,33 +39,33 @@ public class CsvController {
         boolean isErrorHappens = false;
         ///  import customer
         StringBuilder erroCustomer = new StringBuilder();
-        List<CustomerDtoCsv> customerDtoCsvs = csvUtil.read(CustomerDtoCsv.class,customerFile.getInputStream(),erroCustomer);
+        List<CustomerDtoCsv> customerDtoCsvs = csvUtil.read(CustomerDtoCsv.class, customerFile.getInputStream(), erroCustomer);
         if (!erroCustomer.isEmpty()) {
             isErrorHappens = true;
-            model.addAttribute("customerError",erroCustomer.toString());
+            model.addAttribute("customerError", erroCustomer.toString());
         }
         ///  import budget
         StringBuilder erroBudget = new StringBuilder();
-        List<BudgetDtoCsv> budgetDtoCsvs = csvUtil.read(BudgetDtoCsv.class,budgetFile.getInputStream(),erroBudget);
+        List<BudgetDtoCsv> budgetDtoCsvs = csvUtil.read(BudgetDtoCsv.class, budgetFile.getInputStream(), erroBudget);
         if (!erroBudget.isEmpty()) {
             isErrorHappens = true;
-            model.addAttribute("budgetError",erroBudget.toString());
+            model.addAttribute("budgetError", erroBudget.toString());
         }
         ///  import Ticket lead
         StringBuilder errorTicketLead = new StringBuilder();
-        List<TicketLeadDtoCsv> ticketLeadDtoCsvs = csvUtil.read(TicketLeadDtoCsv.class,ticketLeadFile.getInputStream(),errorTicketLead);
+        List<TicketLeadDtoCsv> ticketLeadDtoCsvs = csvUtil.read(TicketLeadDtoCsv.class, ticketLeadFile.getInputStream(), errorTicketLead);
         if (!errorTicketLead.isEmpty()) {
             isErrorHappens = true;
-            model.addAttribute("ticketLeadError",errorTicketLead.toString());
+            model.addAttribute("ticketLeadError", errorTicketLead.toString());
         }
 
         if (isErrorHappens) {
             return "data-modifier/csv/import-csv";
         }
-        try{
-            databaseCustomUtil.importCsvAndSave(budgetDtoCsvs,ticketLeadDtoCsvs,customerDtoCsvs);
-        }catch (SQLDataException exception){
-            model.addAttribute("sqlError",exception.getMessage());
+        try {
+            databaseCustomUtil.importCsvAndSave(budgetDtoCsvs, ticketLeadDtoCsvs, customerDtoCsvs);
+        } catch (SQLDataException exception) {
+            model.addAttribute("sqlError", exception.getMessage());
             return "data-modifier/csv/import-csv";
         }
 
