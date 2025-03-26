@@ -2,14 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <div th:insert="~{/general/head.html}"></div>
-<meta name="_csrf" content="${_csrf.token}"/>
-<meta name="_csrf_header" content="${_csrf.headerName}"/>
+<meta content="${_csrf.token}" name="_csrf"/>
+<meta content="${_csrf.headerName}" name="_csrf_header"/>
 <link rel="stylesheet" th:href="@{/css/bootstrap-wysihtml5.css}"/>
 <!-- Custom CSS -->
-<link th:href="@{/css/style.min.css}" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/style.min.css}">
 <!-- page css -->
-<link th:href="@{/css/pages/inbox.css}" rel="stylesheet">
-<link th:href="@{/css/pages/bootstrap-datepicker.min.css}" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/pages/inbox.css}">
+<link rel="stylesheet" th:href="@{/css/pages/bootstrap-datepicker.min.css}">
 
 
 </head>
@@ -40,43 +40,44 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Créer un Budget</h4>
-                            <form th:object="${budget}" th:action="@{/budget/create-budget}" method="post">
-                                <input type="hidden" th:field="*{customer.customerId}"/>
+                            <form method="post" th:action="@{/budget/create-budget}" th:object="${budget}">
+                                <input th:field="*{customer.customerId}" type="hidden"/>
 
                                 <label class="m-t-20" for="title">Titre:</label>
                                 <div class="input-group">
-                                    <input type="text" id="title" th:field="*{title}" class="form-control" required>
+                                    <input class="form-control" id="title" required th:field="*{title}" type="text">
                                 </div>
 
                                 <label class="m-t-20" for="amount">Montant:</label>
                                 <div class="input-group">
-                                    <input type="number" step="0.01" id="amount" th:field="*{amount}"
-                                           class="form-control" required>
+                                    <input class="form-control" id="amount" required step="0.01"
+                                           th:field="*{amount}" type="number">
                                 </div>
-                                <div th:if="${#fields.hasErrors('amount')}" class="alert alert-danger d-flex align-items-center mt-2" role="alert">
+                                <div class="alert alert-danger d-flex align-items-center mt-2"
+                                     role="alert" th:if="${#fields.hasErrors('amount')}">
                                     <i class="fas fa-exclamation-circle me-2"></i>
-                                    <span th:errors="*{amount}" class="ms-2"> </span>
+                                    <span class="ms-2" th:errors="*{amount}"> </span>
                                 </div>
 
 
                                 <label class="m-t-20" for="start_date">Date de début:</label>
                                 <div class="input-group">
-                                    <input type="date" id="start_date" th:field="*{startDate}" class="form-control"
-                                           required>
+                                    <input class="form-control" id="start_date" required th:field="*{startDate}"
+                                           type="date">
                                 </div>
 
                                 <label class="m-t-20" for="end_date">Date de fin:</label>
                                 <div class="input-group">
-                                    <input type="date" id="end_date" th:field="*{endDate}" class="form-control"
-                                           required>
+                                    <input class="form-control" id="end_date" required th:field="*{endDate}"
+                                           type="date">
                                 </div>
 
                                 <div class="form-actions m-t-40">
-                                    <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-check"></i>
                                         Enregistrer
                                     </button>
-                                    <button type="button" class="btn btn-dark"
-                                            onclick="history.back()">Annuler
+                                    <button class="btn btn-dark" onclick="history.back()"
+                                            type="button">Annuler
                                     </button>
                                 </div>
                             </form>
