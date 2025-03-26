@@ -62,7 +62,7 @@ public class BudgetController {
         }
     }
 
-    @GetMapping("/by-customer/{customerId}")
+    @GetMapping("/customer/{customerId}")
     public String budgetsByCustomer(@PathVariable Integer customerId, Model model) {
         Customer customer = customerService.findByCustomerId(customerId);
         if (customer == null) return "error/not-found";
@@ -70,6 +70,6 @@ public class BudgetController {
         model.addAttribute("budgets", budgetService.getByCustomer(customerId));
         model.addAttribute("customer", customer);
 
-        return "budget/budgets-by-customer";
+        return "budget/customer-budgets";
     }
 }

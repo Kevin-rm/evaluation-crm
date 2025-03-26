@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.entity.Budget;
+import site.easy.to.build.crm.projection.TotalAmountByCustomer;
 import site.easy.to.build.crm.response.ApiResponse;
 import site.easy.to.build.crm.service.BudgetService;
 import site.easy.to.build.crm.service.settings.BudgetSettingsService;
@@ -26,10 +27,15 @@ public class BudgetApiController {
         return ApiResponse.success(budgetService.getAll()).toResponseEntity();
     }
 
-    @GetMapping("/by-customer/{customerId}")
+    @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<Budget>> getByCustomer(@PathVariable Integer customerId) {
         List<Budget> budget = budgetService.getByCustomer(customerId);
         return new ResponseEntity<>(budget, HttpStatus.OK);
+    }
+
+    @GetMapping("/by-customer")
+    public ResponseEntity<ApiResponse<List<TotalAmountByCustomer>>> getBudgetsByCustomer() {
+        return ApiResponse.success(budgetService.getBudgetsGroupByCustomer()).toResponseEntity();
     }
 
     @GetMapping("/alert-threshold")

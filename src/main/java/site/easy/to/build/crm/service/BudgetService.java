@@ -4,14 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.dto.CustomerBudgetSummaryDTO;
 import site.easy.to.build.crm.entity.Budget;
+import site.easy.to.build.crm.projection.TotalAmountByCustomer;
 import site.easy.to.build.crm.repository.BudgetRepository;
 import site.easy.to.build.crm.service.settings.BudgetSettingsService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import static site.easy.to.build.crm.dto.CustomerBudgetSummaryDTO.BudgetStatusAlert.*;
 
@@ -59,21 +58,11 @@ public class BudgetService {
         return result;
     }
 
-    // API SERVICE
-
-    public Map<Integer, Double> getBudgetsByCustomer() {
-        List<Budget> budgets = budgetRepository.findAll();
-        return budgets.stream()
-                .collect(Collectors.groupingBy(
-                        budget -> budget.getCustomer().getCustomerId(),
-                        Collectors.summingDouble(Budget::getAmount) // Additionner les montants
-                ));
+    public List<TotalAmountByCustomer> getBudgetsGroupByCustomer() {
+        return budgetRepository.getBudgetsGroupByCustomer();
     }
 
     public BigDecimal getTotalBudget() {
-        List<Budget> budgets = budgetRepository.findAll();
-        return budgets.stream()
-                .map(budget -> BigDecimal.valueOf(budget.getAmount()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return budgetRepository.totalBudget();
     }
 }

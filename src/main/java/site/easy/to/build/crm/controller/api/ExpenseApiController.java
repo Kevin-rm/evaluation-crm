@@ -3,6 +3,7 @@ package site.easy.to.build.crm.controller.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import site.easy.to.build.crm.dto.ExpenseByCustomer;
 import site.easy.to.build.crm.entity.Expense;
 import site.easy.to.build.crm.response.ApiResponse;
 import site.easy.to.build.crm.service.ExpenseService;
@@ -35,5 +36,15 @@ public class ExpenseApiController {
 
         return ApiResponse.success(String.format("Expense with id %d updated successfully", id))
             .toResponseEntity();
+    }
+
+    @GetMapping("/tickets/by-customer")
+    public ResponseEntity<ApiResponse<List<ExpenseByCustomer>>> getTicketExpensesGroupByCustomer() {
+        return ApiResponse.success(expenseService.getTicketExpensesGroupByCustomer()).toResponseEntity();
+    }
+
+    @GetMapping("/leads/by-customer")
+    public ResponseEntity<ApiResponse<List<ExpenseByCustomer>>> getLeadExpensesGroupByCustomer() {
+        return ApiResponse.success(expenseService.getLeadExpensesGroupByCustomer()).toResponseEntity();
     }
 }
