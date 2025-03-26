@@ -6,6 +6,39 @@
 <meta name="_csrf_header" content="${_csrf.headerName}"/>
 <link th:href="@{/css/style.min.css}" rel="stylesheet">
 <link th:href="@{/css/pages/inbox.css}" rel="stylesheet">
+<style>
+    .file-upload-card {
+        border-left: 4px solid #1e88e5;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    .file-upload-card:hover {
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    .import-header {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .custom-file-input:focus ~ .custom-file-label {
+        border-color: #1e88e5;
+        box-shadow: 0 0 0 0.2rem rgba(30, 136, 229, 0.25);
+    }
+    .import-instructions {
+        background-color: #e8f4fd;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .file-type-icon {
+        font-size: 24px;
+        margin-right: 10px;
+    }
+    .error-container {
+        margin-top: 10px;
+    }
+</style>
 
 <body class="skin-blue fixed-layout">
 <div class="preloader">
@@ -39,62 +72,105 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">CSV File Import</h4>
-                            <h6 class="card-subtitle">Upload your data files in CSV format</h6>
-
-                            <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i>
-                                CSV files must adhere to the system's required format. Ensure your data is correctly formatted.
+                            <div class="import-header">
+                                <h4 class="card-title"><i class="fas fa-file-import mr-2"></i>CSV File Import</h4>
+                                <h6 class="card-subtitle text-muted">Upload your data files in CSV format to import into the system</h6>
                             </div>
-<!--                            show error data expetion sql (foreign key etc)-->
-                            <div th:if="${sqlError != null}" class="alert alert-danger">
-                                <p class="text-danger" th:if="${sqlError != null}" th:utext="${sqlError}"></p>
+
+                            <div class="import-instructions">
+                                <h5><i class="fas fa-info-circle mr-2"></i>Import Instructions</h5>
+                                <ul>
+                                    <li>Files must be in CSV format with proper column headers</li>
+                                    <li>Make sure customer data is imported before related records</li>
+                                </ul>
+                            </div>
+
+                            <!-- Error display section -->
+                            <div th:if="${sqlError != null}" class="alert alert-danger mb-4">
+                                <h5><i class="fas fa-exclamation-triangle mr-2"></i>Import Error</h5>
+                                <p th:utext="${sqlError}"></p>
                             </div>
 
                             <form th:action="@{/csv/import}" method="post" enctype="multipart/form-data" class="mt-4">
-                                <div class="form-group row">
-                                    <label for="customercsv" class="col-md-3 col-form-label">Customer CSV File</label>
-                                    <div class="col-md-9">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="customercsv"
-                                                   name="customercsv"
-                                                   accept=".csv" required>
-                                            <label class="custom-file-label" for="customercsv">Choose file</label>
+                                <div class="card file-upload-card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3 d-flex align-items-center">
+                                                <i class="fas fa-users file-type-icon text-primary"></i>
+                                                <label for="customercsv" class="mb-0 font-weight-bold">Customer CSV File</label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="customercsv"
+                                                           name="customercsv" accept=".csv" required>
+                                                    <label class="custom-file-label" for="customercsv">Choose file</label>
+                                                </div>
+                                                <div class="error-container">
+                                                    <p class="text-danger" th:if="${customerError != null}" th:utext="${customerError}"></p>
+                                                </div>
+                                                <small class="form-text text-muted">
+                                                    Contains customer contact information and organization details.
+                                                </small>
+                                            </div>
                                         </div>
-                                        <p class="text-danger" th:if="${customerError != null}" th:utext="${customerError}"></p>
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="ticketleadcsv" class="col-md-3 col-form-label">Ticket/Lead CSV File</label>
-                                    <div class="col-md-9">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="ticketleadcsv"
-                                                   name="ticketleadcsv"
-                                                   accept=".csv" required>
-                                            <label class="custom-file-label" for="ticketleadcsv">Choose file</label>
+                                <div class="card file-upload-card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3 d-flex align-items-center">
+                                                <i class="fas fa-ticket-alt file-type-icon text-success"></i>
+                                                <label for="ticketleadcsv" class="mb-0 font-weight-bold">Ticket/Lead CSV File</label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="ticketleadcsv"
+                                                           name="ticketleadcsv" accept=".csv" required>
+                                                    <label class="custom-file-label" for="ticketleadcsv">Choose file</label>
+                                                </div>
+                                                <div class="error-container">
+                                                    <p class="text-danger" th:if="${ticketLeadError != null}" th:utext="${ticketLeadError}"></p>
+                                                </div>
+                                                <small class="form-text text-muted">
+                                                    Contains ticket and sales lead information linked to customers.
+                                                </small>
+                                            </div>
                                         </div>
-                                        <p class="text-danger" th:if="${ticketLeadError != null}" th:utext="${ticketLeadError}"></p>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="budgetcsv" class="col-md-3 col-form-label">Budget CSV File</label>
-                                    <div class="col-md-9">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="budgetCsv"
-                                                   name="budgetcsv"
-                                                   accept=".csv" required>
-                                            <label class="custom-file-label" for="budgetcsv">Choose file</label>
-                                        </div>
-                                        <p class="text-danger" th:if="${budgetError != null}" th:utext="${budgetError}"></p>
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <div class="col-md-9 offset-md-3">
-                                        <button type="submit" class="btn btn-success">
-                                            <i class="fas fa-file-import mr-1"></i> Import Data
-                                        </button>
+                                <div class="card file-upload-card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3 d-flex align-items-center">
+                                                <i class="fas fa-money-bill-wave file-type-icon text-warning"></i>
+                                                <label for="budgetcsv" class="mb-0 font-weight-bold">Budget CSV File</label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input" id="budgetCsv"
+                                                           name="budgetcsv" accept=".csv" required>
+                                                    <label class="custom-file-label" for="budgetcsv">Choose file</label>
+                                                </div>
+                                                <div class="error-container">
+                                                    <p class="text-danger" th:if="${budgetError != null}" th:utext="${budgetError}"></p>
+                                                </div>
+                                                <small class="form-text text-muted">
+                                                    Contains budget information related to customers and projects.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card mt-4">
+                                    <div class="card-body d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fas fa-file-import mr-1"></i> Import Data
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
