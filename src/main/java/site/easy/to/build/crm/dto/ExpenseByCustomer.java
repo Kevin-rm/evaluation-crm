@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 @Data
 public class ExpenseByCustomer implements TotalAmountByCustomer {
     private String     customerName;
+    @JsonIgnore
     private BigDecimal totalExpense;
 
-    @JsonIgnore
     @Override
     public BigDecimal getTotalAmount() {
         return totalExpense;

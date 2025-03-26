@@ -34,7 +34,7 @@ public class BudgetApiController {
     }
 
     @GetMapping("/by-customer")
-    public ResponseEntity<ApiResponse<List<TotalAmountByCustomer>>> getBudgetsByCustomer() {
+    public ResponseEntity<ApiResponse<List<TotalAmountByCustomer>>> getBudgetsGroupByCustomer() {
         return ApiResponse.success(budgetService.getBudgetsGroupByCustomer()).toResponseEntity();
     }
 
