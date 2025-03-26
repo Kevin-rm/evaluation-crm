@@ -1,6 +1,7 @@
 package site.easy.to.build.crm.service.customer;
 
 
+import site.easy.to.build.crm.DTO.CustomerDuplicationResult;
 import site.easy.to.build.crm.entity.Customer;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface CustomerService {
 
     long countByUserId(int userId);
 
+    CustomerDuplicationResult duplicate(Customer customer);
 
+    void save(CustomerDuplicationResult customerDuplicationResult);
 }

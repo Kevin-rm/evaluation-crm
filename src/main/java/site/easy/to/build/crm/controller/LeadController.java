@@ -152,6 +152,8 @@ public class LeadController {
     @GetMapping("/manager/all-leads")
     public String showAllLeads(Model model) {
         List<Lead> leads = leadService.findAll();
+        System.out.println(leads);
+
         model.addAttribute("leads", leads);
         return "lead/show-my-leads";
     }

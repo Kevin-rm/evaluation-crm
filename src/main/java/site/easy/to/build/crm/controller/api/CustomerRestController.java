@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import site.easy.to.build.crm.DTO.CustomerDuplicationResult;
 import site.easy.to.build.crm.entity.Customer;
 import site.easy.to.build.crm.entity.User;
 import site.easy.to.build.crm.service.customer.CustomerService;
@@ -40,5 +41,13 @@ public class CustomerRestController {
             return ResponseEntity.ok(user);
         }
         return ResponseEntity.badRequest().build();
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<?> importCustomer(@RequestBody CustomerDuplicationResult duplicata) {
+        System.out.println(duplicata);
+        // save this in the db
+        customerService.save(duplicata);
+        return ResponseEntity.ok("Customer imported successfully");
     }
 }

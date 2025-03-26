@@ -1,7 +1,13 @@
 package site.easy.to.build.crm.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -27,6 +33,7 @@ import site.easy.to.build.crm.util.AuthenticationUtils;
 import site.easy.to.build.crm.util.AuthorizationUtil;
 import site.easy.to.build.crm.util.EmailTokenUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -43,13 +50,14 @@ public class CustomerController {
     private final TicketService ticketService;
     private final ContractService contractService;
     private final LeadService leadService;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public CustomerController(CustomerService customerService, UserService userService,
-            CustomerLoginInfoService customerLoginInfoService,
-            AuthenticationUtils authenticationUtils, GoogleGmailApiService googleGmailApiService,
-            Environment environment,
-            TicketService ticketService, ContractService contractService, LeadService leadService) {
+                              CustomerLoginInfoService customerLoginInfoService,
+                              AuthenticationUtils authenticationUtils, GoogleGmailApiService googleGmailApiService,
+                              Environment environment,
+                              TicketService ticketService, ContractService contractService, LeadService leadService, ObjectMapper objectMapper) {
         this.customerService = customerService;
         this.userService = userService;
         this.customerLoginInfoService = customerLoginInfoService;
@@ -59,6 +67,7 @@ public class CustomerController {
         this.ticketService = ticketService;
         this.contractService = contractService;
         this.leadService = leadService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping("/manager/all-customers")
@@ -216,4 +225,20 @@ public class CustomerController {
         return "redirect:/employee/customer/my-customers";
     }
 
+    @GetMapping("/duplicate/{id}")
+    public Object duplicate(@PathVariable Integer id) throws JsonProcessingException {
+        Customer customer = customerService.findByCustomerId(id);
+        if (customer == null) return "error/not-found";
+
+        byte[] bytes = objectMapper
+            .writeValueAsString(customerService.duplicate(customer))
+            .getBytes(StandardCharsets.UTF_8);
+
+        return ResponseEntity
+            .ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=customers.json")
+            .contentType(MediaType.APPLICATION_JSON)
+            .contentLength(bytes.length)
+            .body(bytes);
+    }
 }

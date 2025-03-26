@@ -3,11 +3,13 @@ package site.easy.to.build.crm.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.ToString;
 import site.easy.to.build.crm.entity.Expense;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@ToString
 @Entity
 @Table(name = "trigger_lead")
 public class Lead {
