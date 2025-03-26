@@ -27,7 +27,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
              c.name, 
              CAST(COALESCE(SUM(t.expense.amount), 0.0) AS BigDecimal)
         ) FROM Ticket t
-            JOIN FETCH t.customer c
+            JOIN t.customer c
         GROUP BY c.name, c.customerId
     """)
     List<ExpenseByCustomer> findTicketExpensesGroupByCustomer();
@@ -37,7 +37,7 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
              c.name, 
              CAST(COALESCE(SUM(l.expense.amount), 0.0) AS BigDecimal)
         ) FROM Lead l
-            JOIN FETCH l.customer c
+            JOIN l.customer c
         GROUP BY c.name, c.customerId
     """)
     List<ExpenseByCustomer> findLeadExpensesGroupByCustomer();

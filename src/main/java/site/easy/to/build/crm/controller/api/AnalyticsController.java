@@ -7,7 +7,6 @@ import site.easy.to.build.crm.projection.TicketAndLeadExpenseTotals;
 import site.easy.to.build.crm.response.ApiResponse;
 import site.easy.to.build.crm.service.BudgetService;
 import site.easy.to.build.crm.service.ExpenseService;
-import site.easy.to.build.crm.service.customer.CustomerService;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -19,7 +18,6 @@ public class AnalyticsController {
 
     private final ExpenseService expenseService;
     private final BudgetService budgetService;
-    private final CustomerService customerService;
 
     @GetMapping("/total-data")
     public ResponseEntity<ApiResponse<Map<String, BigDecimal>>> totalData() {
