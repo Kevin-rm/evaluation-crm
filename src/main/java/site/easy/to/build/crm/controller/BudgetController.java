@@ -1,7 +1,7 @@
 package site.easy.to.build.crm.controller;
 
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,23 +35,12 @@ public class BudgetController {
         return "budget/create-budget";
     }
 
-    @PostMapping("/create/{customerId}")
-    public String createBudget(
-        @PathVariable Integer customerId,
-        @Valid @ModelAttribute Budget budget,
-        BindingResult bindingResult,
-        RedirectAttributes redirectAttributes
-    ) {
-        Customer customer = customerService.findByCustomerId(customerId);
-        if (customer == null) return "error/not-found";
-
+    @PostMapping("/create-budget")
+    public String createBudget(@Valid @ModelAttribute("budget") Budget budget, BindingResult bindingResult,Model model) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.budget", bindingResult);
-            redirectAttributes.addFlashAttribute("budget", budget);
-
-            return "redirect:/employee/budget/create/" + customerId;
+            model.addAttribute("budget", budget);
+            return "budget/create-budget";
         }
-
         try {
             budget.setCustomer(customer);
             budgetService.save(budget);
@@ -65,9 +54,11 @@ public class BudgetController {
     @GetMapping("/customer/{customerId}")
     public String budgetsByCustomer(@PathVariable Integer customerId, Model model) {
         Customer customer = customerService.findByCustomerId(customerId);
-        if (customer == null) return "error/not-found";
-
-        model.addAttribute("budgets", budgetService.getByCustomer(customerId));
+        if (customer == null) {
+            return "error/not-found";
+        }
+        List<Budget> budgets = budgetService.findBudgetsByCustomerId(customerId);
+        model.addAttribute("budgets", budgets);
         model.addAttribute("customer", customer);
 
         return "budget/customer-budgets";

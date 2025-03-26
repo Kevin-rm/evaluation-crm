@@ -1,7 +1,9 @@
 package site.easy.to.build.crm.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,14 +22,12 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Setter
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "description")
+    @Size(max = 255, message = "La description ne peut pas dépasser 255 caractères.")
     private String description;
 
-    @Setter
-    @NotNull(message = "Amount is required")
-    @Positive(message = "Amount must be positive")
-    @Column(nullable = false)
+    @Column(name = "amount")
+    @Positive(message = "Amount must be positive.")
     private Double amount;
 
     @Setter
@@ -36,10 +36,4 @@ public class Expense {
     @Column(nullable = false)
     private LocalDate expenseDate;
 
-    private LocalDate createdAt;
-
-    @Setter
-    @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    private Customer customer;
 }

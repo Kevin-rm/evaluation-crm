@@ -10,21 +10,27 @@ import java.util.List;
 
 public interface BudgetRepository extends JpaRepository<Budget, Integer> {
 
-    List<Budget> findByCustomerCustomerId(Integer customerId);
+    @Query("""
+                select COALESCE(SUM(b.amount),0)  from Budget b where b.customer.customerId = :customerId
+            """)
+    public double getTotalBudgetByCustomer(@Param("customerId") Integer customerId);
 
-    @Query(value = """
-        SELECT b.customer_id,
-               b.initialAmount,
-               b.initialAmount - COALESCE((
-                    SELECT SUM(amount)
-                    FROM expense
-                    WHERE customer_id = :customerId), 0) AS currentAmount
-        FROM (SELECT customer_id, SUM(amount) AS initialAmount
-              FROM budget
-              WHERE customer_id = :customerId
-              GROUP BY customer_id) b
-    """, nativeQuery = true)
-    Object getCustomerBudgetSummary(Integer customerId);
+//    @Query(value = """
+//            SELECT
+//                    b.budget_id,
+//                    b.title,
+//                    b.amount,
+//                    b.amount - COALESCE(SUM(e.amount), 0),
+//                    b.start_date,
+//                    b.end_date,
+//                    b.customer_id
+//            FROM budget b
+//            LEFT JOIN crm.expense e ON b.budget_id = e.budget_id
+//            WHERE b.customer_id = :customerId
+//            GROUP BY b.budget_id, b.title, b.start_date, b.end_date, b.customer_id,b.amount
+//            """, nativeQuery = true)
+//    List<Object[]> getBudgetsAfterExpenseRaw(@Param("customerId") Integer customerId);
+
 
     @Query("SELECT COALESCE(SUM(b.amount), 0) FROM Budget b")
     BigDecimal totalBudget();

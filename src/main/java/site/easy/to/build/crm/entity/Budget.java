@@ -2,7 +2,9 @@ package site.easy.to.build.crm.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,14 +32,8 @@ public class Budget {
     @Column(nullable = false)
     private String name;
 
-    @Setter
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @Setter
-    @NotNull(message = "Amount is required")
-    @Positive(message = "Amount must be greater than 0")
-    @Column(nullable = false)
+    @Column(name = "amount")
+    @Positive(message = "Le montant doit être supérieur à 0.")
     private Double amount;
 
     @Setter
@@ -52,8 +48,10 @@ public class Budget {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    @JsonIgnore
-    private LocalDateTime createdAt;
+    @ManyToOne(optional = false )
+    @JoinColumn(name = "customer_id")
+    @NotNull(message = "Le client associé est obligatoire.")
+    Customer customer;
 
     @JsonIgnore
     @Setter
