@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import site.easy.to.build.crm.DTO.CustomerDuplicationResult;
 import site.easy.to.build.crm.entity.Lead;
 import site.easy.to.build.crm.entity.Ticket;
@@ -78,6 +79,7 @@ public class CustomerServiceImpl implements CustomerService {
         return new CustomerDuplicationResult(customerId, customer.getName(), String.format("copy_%s", customer.getEmail()), customer.getCountry(), leads, tickets);
     }
 
+    @Transactional
     @Override
     public void save(CustomerDuplicationResult customerDuplicationResult) {
         Customer customer = new Customer();
@@ -85,7 +87,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setEmail(customerDuplicationResult.email());
         customer.setCountry(customerDuplicationResult.country());
 
-        save(customer);
+        customer = customerRepository.save(customer);
 
         for (CustomerDuplicationResult.LeadDuplication ld : customerDuplicationResult.leads()) {
             Lead lead = new Lead();

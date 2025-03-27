@@ -9,7 +9,7 @@ import site.easy.to.build.crm.entity.Expense;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@ToString
+@ToString(exclude = {"leadActions", "files", "googleDriveFiles"})
 @Entity
 @Table(name = "trigger_lead")
 public class Lead {
